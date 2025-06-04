@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-
+import { useAuth } from "../../context/AuthContext"
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true)
   const [name, setName] = useState("")
@@ -11,7 +11,7 @@ const AuthForm = () => {
   const [success, setSuccess] = useState("")
   const navigate = useNavigate();
 
-
+ const { login } = useAuth();
  const handleSubmit = async (e) => {
   e.preventDefault()
   setError("")
@@ -38,10 +38,11 @@ const AuthForm = () => {
       throw new Error(data.message || "Something went wrong")
     }
 
-    //  Optional: Save token (if present)
-    if (data.token) {
-      localStorage.setItem("token", data.token)
-    }
+  
+if (data.token) {
+  login(data.token);
+}
+
 
     //  Redirect to homepage
     navigate("/")
