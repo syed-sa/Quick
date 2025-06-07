@@ -39,8 +39,8 @@ const AuthForm = () => {
     }
 
   
-if (data.token) {
-  login(data.token);
+if (data.accessToken ) {
+  login(data.accessToken);
 }
 
 
