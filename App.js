@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/layouts/Header";
 import Footer from "./components/layouts/Footer";
 import HomePage from "./pages/HomePage";
-import AuthForm from "./components/sections/AuthForm";
+import AuthForm from "./components/auth/AuthForm";
 import Favorites from "./pages/Favorites";
 import { useState } from "react"
 
