@@ -4,6 +4,7 @@ import Footer from "./components/layouts/Footer";
 import HomePage from "./pages/HomePage";
 import AuthForm from "./components/auth/AuthForm";
 import Favorites from "./pages/Favorites";
+import UserProfile from "./pages/Profile";
 import { useState } from "react"
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<HomePage selectedCity={selectedCity} />} />
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/favourites" element={<Favorites />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
       <Footer />
     </div>

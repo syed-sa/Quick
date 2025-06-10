@@ -6,11 +6,12 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = (token, refreshToken) => {
+  const login = (token, refreshToken,userName) => {
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("userName", userName);
     const decoded = jwtDecode(token);
-    setUser({ email: decoded.sub });
+    setUser({ email: decoded.sub, name: userName });
   };
 
   const logout = async () => {
@@ -44,10 +45,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const userName = localStorage.getItem("userName");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser({ email: decoded.sub });
+        setUser({ email: decoded.sub, name: userName });
       } catch (err) {
         logout(); // invalid token
       }

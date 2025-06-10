@@ -31,7 +31,7 @@ const Header = ({ selectedCity, setSelectedCity }) => {
                 <div className="relative group">
                   <div className="flex items-center text-gray-600 hover:text-gray-900 cursor-pointer py-2">
                     <User className="h-5 w-5 mr-1" />
-                    <span>Hello, {user.email.split("@")[0]}</span>
+                    <span>Hello, {user.name}</span>
                   </div>
 
                   <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg border z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out

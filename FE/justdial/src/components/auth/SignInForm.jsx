@@ -36,7 +36,7 @@ const SignInForm = () => {
       if (!response.ok) throw new Error(resData.message || "Something went wrong");
 
       if (resData.accessToken) {
-        login(resData.accessToken,resData.refreshToken);
+        login(resData.accessToken,resData.refreshToken,resData.userName);
       }
 
       navigate("/");

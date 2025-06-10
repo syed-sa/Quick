@@ -86,6 +86,32 @@ const SignUpForm = () => {
         />
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>
+<div>
+  <label className="text-sm font-medium text-gray-700 mb-1 block">Phone</label>
+  <div className="flex">
+    {/* Country Code Selector */}
+   <select
+  {...register("countryCode")}
+  className="w-20 px-2 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white text-gray-700 text-sm"
+>
+  <option value="+91">🇮🇳 +91</option>
+  <option value="+1">🇺🇸 +1</option>
+  <option value="+44">🇬🇧 +44</option>
+  <option value="+971">🇦🇪 +971</option>
+  <option value="+61">🇦🇺 +61</option>
+</select>
+    {/* Phone Number Input */}
+    <input
+      type="tel"
+      {...register("phone")}
+      placeholder="Your Phone Number"
+      className={`flex-grow px-4 py-2 border rounded-r-lg focus:outline-none focus:ring-2 ${
+        errors.phone ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-red-400"
+      }`}
+    />
+  </div>
+  {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+</div>
 
       <button
         type="submit"

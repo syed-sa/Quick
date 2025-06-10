@@ -47,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(signUpRequest.getEmail());
         user.setName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setPhone(signUpRequest.getPhone());
         _userRepository.save(user);
     }
 
@@ -78,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     String token = jwtUtils.generateToken(userDetails);
     RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
     _refreshTokenRepository.save(refreshToken);
-    TokenResponse tokenResponse = new TokenResponse(token, refreshToken.getToken(), user.getId());
+    TokenResponse tokenResponse = new TokenResponse(user.getName(), token, refreshToken.getToken(), user.getId());
     return ResponseEntity.ok(tokenResponse);
 }
 
@@ -94,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
                     user.getPassword(), new ArrayList<>());
             String newAccessToken = jwtUtils.generateToken(userDetails);
             RefreshToken newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
-            TokenResponse tokenResponse = new TokenResponse(newAccessToken, newRefreshToken.getToken(), user.getId());
+            TokenResponse tokenResponse = new TokenResponse(user.getName(), newAccessToken, newRefreshToken.getToken(), user.getId());
             _refreshTokenRepository.save(newRefreshToken);
             return ResponseEntity.ok(tokenResponse);
         } 
