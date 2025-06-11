@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import AuthForm from "./components/auth/AuthForm";
 import Favorites from "./pages/Favorites";
 import UserProfile from "./pages/Profile";
+import RegisterService from "./pages/RegisterService";
+import PrivateRoute from "./components/auth/PrivateRoute";
 import { useState } from "react"
 
 function App() {
@@ -18,6 +20,17 @@ function App() {
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/favourites" element={<Favorites />} />
         <Route path="/profile" element={<UserProfile />} />
+        {/* Add more routes as needed */}
+
+         {/* Protected Route */}
+  <Route
+    path="/register-service"
+    element={
+      <PrivateRoute>
+        <RegisterService />
+      </PrivateRoute>
+    }
+  />
       </Routes>
       <Footer />
     </div>
