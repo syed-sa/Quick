@@ -51,7 +51,7 @@ const handleImageChange = (e) => {
           <form onSubmit={handleSubmit} className="space-y-5 text-sm text-gray-700">
             {/* Business Name */}
             <div className="space-y-2">
-              <label className="block font-medium">Business Name</label>
+              <label className="block font-medium">Company Name</label>
               <div className="flex items-center border rounded-md px-3 py-2 bg-gray-50">
                 <Building2 className="w-4 h-4 text-gray-500 mr-2" />
                 <input
