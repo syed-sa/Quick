@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.justsearch.backend.dto.RegisterServices;
 import com.justsearch.backend.service.RegisterServicesService;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,7 +24,7 @@ public class ServicesController {
 
 
 @PostMapping("/register")
-    public ResponseEntity<?> registerService(@RequestBody RegisterServices service) {
+    public ResponseEntity<?> registerService(@ModelAttribute RegisterServices service) {
    try {
        _registerServicesService.registerBusiness(service);
        return ResponseEntity.ok().build();

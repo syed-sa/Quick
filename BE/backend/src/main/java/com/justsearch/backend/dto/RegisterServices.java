@@ -1,4 +1,5 @@
 package com.justsearch.backend.dto;
+import org.springframework.web.multipart.MultipartFile;
 
 public class RegisterServices {
 
@@ -10,9 +11,10 @@ public class RegisterServices {
     public String Email;
     public String website;
     public String Address;
+    public MultipartFile[] Images;
 
     public RegisterServices(String companyName, String city, String buisnessCategory, String phone,
-            String email, String website, String address, long userId) {
+            String email, String website, String address, long userId, MultipartFile[] images) {
         CompanyName = companyName;
         this.city = city;
         this.BusinessCategory = buisnessCategory;
@@ -21,6 +23,7 @@ public class RegisterServices {
         this.website = website;
         this.Address = address;
         this.userId = userId;
+        this.Images = images;
     }
 
     public String getCompanyName() {
@@ -86,5 +89,12 @@ public class RegisterServices {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public MultipartFile[] getImages() {
+        return Images;
+    }
+    public void setImages(MultipartFile[] images) {
+        Images = images;
     }
 }
