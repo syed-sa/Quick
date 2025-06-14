@@ -8,5 +8,6 @@ import com.justsearch.backend.model.Services;
 @Repository
 public interface ServicesRepository extends JpaRepository<Services, Long> {
     // Custom query methods (if needed) can be defined here
-    boolean existsByUserId(long userId);
+    boolean existsByUserIdAndCompanyName(long userId, String companyName);
+    // 
 }

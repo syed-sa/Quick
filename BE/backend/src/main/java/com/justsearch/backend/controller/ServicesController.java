@@ -26,8 +26,8 @@ public class ServicesController {
    try {
        _registerServicesService.registerBusiness(service);
        return ResponseEntity.ok().build();
-   } catch (IllegalArgumentException e) {
-       return ResponseEntity.badRequest().body(e.getMessage());
+   } catch (Exception e) {
+       return ResponseEntity.internalServerError().body("Error registering service: " + e.getMessage());
    }
 }
 }

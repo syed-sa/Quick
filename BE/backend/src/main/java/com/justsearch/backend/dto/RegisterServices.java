@@ -1,8 +1,9 @@
 package com.justsearch.backend.dto;
+
 public class RegisterServices {
 
-    public long userId ;
-    public  String CompanyName;
+    public long userId;
+    public String CompanyName;
     public String city;
     public String BusinessCategory;
     public String Phone;
@@ -10,8 +11,8 @@ public class RegisterServices {
     public String website;
     public String Address;
 
-    public RegisterServices(String companyName, String city, String buisnessCategory, String phone, 
-    String email, String website, String address, long userId) {
+    public RegisterServices(String companyName, String city, String buisnessCategory, String phone,
+            String email, String website, String address, long userId) {
         CompanyName = companyName;
         this.city = city;
         this.BusinessCategory = buisnessCategory;
@@ -23,50 +24,66 @@ public class RegisterServices {
     }
 
     public String getCompanyName() {
-        return CompanyName;
+        return CompanyName.toUpperCase().replaceAll(" ", "_");
     }
+
     public void setCompanyName(String companyName) {
-        CompanyName = companyName;
+        CompanyName = companyName.toUpperCase().replaceAll(" ", "_");
     }
+
     public String getCity() {
         return city;
     }
+
     public void setCity(String city) {
         this.city = city;
+
     }
+
     public String getBusinessCategory() {
         return BusinessCategory;
     }
+
     public void setBusinessCategory(String businessCategory) {
         BusinessCategory = businessCategory;
     }
+
     public String getPhone() {
         return Phone;
     }
+
     public void setPhone(String phone) {
         Phone = phone;
     }
+
     public String getEmail() {
         return Email;
     }
+
     public void setEmail(String email) {
         Email = email;
     }
+
     public String getWebsite() {
         return website;
     }
+
     public void setWebsite(String website) {
         this.website = website;
     }
+
     public String getAddress() {
         return Address;
     }
+
     public void setAddress(String address) {
         Address = address;
     }
+
     public long getUserId() {
         return userId;
     }
+
     public void setUserId(long userId) {
         this.userId = userId;
     }
