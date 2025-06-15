@@ -21,6 +21,7 @@ public class Services {
     public String email;
     public String website;
     public String address;
+    public String folderPath;
 
     public String getCompanyName() {
         return companyName;
@@ -85,4 +86,10 @@ public class Services {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+    public String getFolderPath() {
+        return folderPath;
+    }
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
+}
 }

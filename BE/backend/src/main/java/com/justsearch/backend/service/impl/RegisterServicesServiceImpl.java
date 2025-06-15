@@ -37,10 +37,11 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
             services.setCity(registerServices.getCity());
             services.setBusinessCategory(registerServices.getBusinessCategory());
             services.setAddress(registerServices.getAddress());
-            String folderPath = basePath + AppConstants.USER_DATA;
+            String folderPath = basePath + AppConstants.USER_DATA + registerServices.getUserId();
+            services.setFolderPath(folderPath);
             int counter = registerServices.getImages().length;
             for (MultipartFile image : registerServices.getImages()) {
-                String fileName = registerServices.getUserId() + String.format(AppConstants.IMAGE_TEMPLATE, counter);
+                String fileName =  String.format(AppConstants.IMAGE_TEMPLATE, counter);
                 Path filePath = Path.of(folderPath, fileName);
                 counter--;
                 try {

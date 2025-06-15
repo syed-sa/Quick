@@ -24,7 +24,7 @@ public class ServicesController {
 @PostMapping(value = "/register",consumes = "multipart/form-data")
     public ResponseEntity<?> registerService(@ModelAttribute RegisterServices service) {
    try {
-    //    _registerServicesService.registerBusiness(service);
+       _registerServicesService.registerBusiness(service);
        return ResponseEntity.ok().build();
    } catch (Exception e) {
        return ResponseEntity.internalServerError().body("Error registering service: " + e.getMessage());

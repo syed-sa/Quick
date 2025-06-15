@@ -56,7 +56,6 @@ const handleSubmit = async (e) => {
       body: form,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        ContentType : "multipart/form-data", // Note: This header is usually set automatically by the browser when using FormData 
       },
     });
 
