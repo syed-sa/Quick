@@ -52,7 +52,7 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
                 }
             }
 
-            // _servicesRepository.save(services);
+             _servicesRepository.save(services);
         }
     }
 }
