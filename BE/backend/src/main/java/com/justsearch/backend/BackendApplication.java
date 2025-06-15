@@ -3,6 +3,7 @@ package com.justsearch.backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.security.access.AccessDeniedException;
 
 import com.justsearch.backend.config.JwtConfig;
 
@@ -11,7 +12,16 @@ import com.justsearch.backend.config.JwtConfig;
 public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		try {
+   SpringApplication.run(BackendApplication.class, args);
+	}
+ catch (AccessDeniedException ace) {
+    ace.printStackTrace();
+    throw ace;
+
+		
+
+}
 	}
 
 }
