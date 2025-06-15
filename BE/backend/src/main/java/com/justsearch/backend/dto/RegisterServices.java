@@ -1,37 +1,28 @@
 package com.justsearch.backend.dto;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class RegisterServices {
 
     public long userId;
-    public String CompanyName;
+    public String companyName;
     public String city;
-    public String BusinessCategory;
-    public String Phone;
-    public String Email;
+    public String businessCategory;
+    public String phone;
+    public String email;
     public String website;
-    public String Address;
-    public MultipartFile[] Images;
+    public String address;
+    public MultipartFile[] images;
 
-    public RegisterServices(String companyName, String city, String buisnessCategory, String phone,
-            String email, String website, String address, long userId, MultipartFile[] images) {
-        CompanyName = companyName;
-        this.city = city;
-        this.BusinessCategory = buisnessCategory;
-        this.Phone = phone;
-        this.Email = email;
-        this.website = website;
-        this.Address = address;
-        this.userId = userId;
-        this.Images = images;
+    public RegisterServices() {
     }
 
     public String getCompanyName() {
-        return CompanyName.toUpperCase().replaceAll(" ", "_");
+        return companyName.toUpperCase().replaceAll(" ", "_");
     }
 
     public void setCompanyName(String companyName) {
-        CompanyName = companyName.toUpperCase().replaceAll(" ", "_");
+        this.companyName = companyName;
     }
 
     public String getCity() {
@@ -44,27 +35,27 @@ public class RegisterServices {
     }
 
     public String getBusinessCategory() {
-        return BusinessCategory;
+        return businessCategory;
     }
 
     public void setBusinessCategory(String businessCategory) {
-        BusinessCategory = businessCategory;
+        this.businessCategory = businessCategory;
     }
 
     public String getPhone() {
-        return Phone;
+        return phone;
     }
 
     public void setPhone(String phone) {
-        Phone = phone;
+        this.phone = phone;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getWebsite() {
@@ -76,11 +67,11 @@ public class RegisterServices {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public long getUserId() {
@@ -92,9 +83,10 @@ public class RegisterServices {
     }
 
     public MultipartFile[] getImages() {
-        return Images;
+        return images;
     }
+
     public void setImages(MultipartFile[] images) {
-        Images = images;
+        this.images = images;
     }
 }

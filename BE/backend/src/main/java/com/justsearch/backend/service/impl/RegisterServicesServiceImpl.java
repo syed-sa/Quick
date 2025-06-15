@@ -1,4 +1,5 @@
 package com.justsearch.backend.service.impl;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -13,6 +14,7 @@ import com.justsearch.backend.dto.RegisterServices;
 import com.justsearch.backend.model.Services;
 import com.justsearch.backend.repository.ServicesRepository;
 import com.justsearch.backend.service.RegisterServicesService;
+
 @Service
 public class RegisterServicesServiceImpl implements RegisterServicesService {
     private ServicesRepository _servicesRepository;
@@ -25,7 +27,8 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
     }
 
     public void registerBusiness(RegisterServices registerServices) {
-        if (_servicesRepository.existsByUserIdAndCompanyName(registerServices.getUserId(), registerServices.getCompanyName())) {
+        if (_servicesRepository.existsByUserIdAndCompanyName(registerServices.getUserId(),
+                registerServices.getCompanyName())) {
             throw new IllegalStateException("Business has already been registered by this user.");
         } else {
             Services services = new Services();
@@ -34,7 +37,7 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
             services.setCity(registerServices.getCity());
             services.setBusinessCategory(registerServices.getBusinessCategory());
             services.setAddress(registerServices.getAddress());
-            String folderPath = basePath + AppConstants.USER_DATA ;
+            String folderPath = basePath + AppConstants.USER_DATA;
             int counter = registerServices.getImages().length;
             for (MultipartFile image : registerServices.getImages()) {
                 String fileName = registerServices.getUserId() + String.format(AppConstants.IMAGE_TEMPLATE, counter);

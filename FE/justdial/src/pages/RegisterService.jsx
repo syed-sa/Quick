@@ -32,10 +32,46 @@ const handleImageChange = (e) => {
   e.target.value = "";
 };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData); // Replace this with actual API call
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const form = new FormData();
+  form.append("userId", localStorage.getItem("userId")); 
+  form.append("companyName", formData.businessName);
+  form.append("city", formData.city);
+  form.append("businessCategory", formData.category);
+  form.append("phone", formData.phone);
+  form.append("email", formData.email);
+  form.append("website", formData.website);
+  form.append("address", formData.address);
+
+  // Append each image
+  formData.images.forEach((file) => {
+    form.append("images", file);
+  });
+
+  try {
+    const res = await fetch("http://localhost:8080/api/services/register", {
+      method: "POST",
+      body: form,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        ContentType : "multipart/form-data", // Note: This header is usually set automatically by the browser when using FormData 
+      },
+    });
+
+    if (res.ok) {
+      alert("Business registered successfully!");
+    } else {
+      const error = await res.text();
+      alert("Failed: " + error);
+    }
+  } catch (err) {
+    console.error("Error submitting form:", err);
+    alert("Something went wrong");
+  }
+};
+
 
   return (
     <section className="bg-gradient-to-r from-yellow-50 to-red-50 min-h-screen py-12">
