@@ -1,14 +1,9 @@
 package com.justsearch.backend.service.impl;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import javax.naming.spi.DirectoryManager;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.RegisterServices;
 import com.justsearch.backend.model.Services;
@@ -51,7 +46,6 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
                     throw new RuntimeException("Failed to save image: " + fileName, e);
                 }
             }
-
              _servicesRepository.save(services);
         }
     }
