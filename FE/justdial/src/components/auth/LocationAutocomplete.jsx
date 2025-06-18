@@ -36,7 +36,7 @@ export default function LocationAutocomplete({ onSelect }) {
         value={query}
         placeholder="Enter area in Chennai"
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none text-sm text-gray-700"
+        className="w-full px-3 py-2 rounded-md border border-gray-300  focus:outline-none text-sm text-gray-700"
       />
       {suggestions.length > 0 && (
         <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto">
