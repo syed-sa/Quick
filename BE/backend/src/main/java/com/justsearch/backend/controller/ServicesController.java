@@ -3,7 +3,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.justsearch.backend.dto.RegisterServices;
-import com.justsearch.backend.service.RegisterServicesService;
+import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 public class ServicesController {
 
-    public RegisterServicesService _registerServicesService;
+    public BuisnessRegistry _registerServicesService;
     
-    public ServicesController(RegisterServicesService registerServicesService) {
+    public ServicesController(BuisnessRegistry registerServicesService) {
         this._registerServicesService = registerServicesService;
     }
 

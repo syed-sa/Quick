@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.justsearch.backend.dto.SignIn;
 import com.justsearch.backend.dto.SignupRequest;
-import com.justsearch.backend.service.AuthService;
+import com.justsearch.backend.service.Authentication.AuthService;
+
 import java.util.Map;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

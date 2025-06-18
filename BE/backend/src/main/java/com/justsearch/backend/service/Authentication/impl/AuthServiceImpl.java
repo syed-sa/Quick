@@ -1,4 +1,4 @@
-package com.justsearch.backend.service.impl;
+package com.justsearch.backend.service.Authentication.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.RefreshTokenRepository;
 import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.security.JwtUtils;
-import com.justsearch.backend.service.AuthService;
+import com.justsearch.backend.service.Authentication.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {

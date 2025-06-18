@@ -12,6 +12,7 @@ public class RegisterServices {
     public String email;
     public String website;
     public String address;
+    public int postalCode;
     public MultipartFile[] images;
 
     public RegisterServices() {
@@ -88,5 +89,11 @@ public class RegisterServices {
 
     public void setImages(MultipartFile[] images) {
         this.images = images;
+    }
+    public int getPostalCode() {
+        return postalCode;
+    }
+    public void setPostalCode(int postalCode) {
+        this.postalCode = postalCode;
     }
 }

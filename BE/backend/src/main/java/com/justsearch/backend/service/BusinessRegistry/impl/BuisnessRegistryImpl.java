@@ -1,6 +1,8 @@
-package com.justsearch.backend.service.impl;
+package com.justsearch.backend.service.BusinessRegistry.impl;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,16 +10,16 @@ import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.RegisterServices;
 import com.justsearch.backend.model.Services;
 import com.justsearch.backend.repository.ServicesRepository;
-import com.justsearch.backend.service.RegisterServicesService;
+import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
 
 @Service
-public class RegisterServicesServiceImpl implements RegisterServicesService {
+public class BuisnessRegistryImpl implements BuisnessRegistry {
     private ServicesRepository _servicesRepository;
 
     @Value("${basepath}")
     private String basePath;
 
-    public RegisterServicesServiceImpl(ServicesRepository servicesRepository) {
+    public BuisnessRegistryImpl(ServicesRepository servicesRepository) {
         _servicesRepository = servicesRepository;
     }
 
@@ -48,5 +50,24 @@ public class RegisterServicesServiceImpl implements RegisterServicesService {
             }
              _servicesRepository.save(services);
         }
+    }
+
+        public List<RegisterServices> getServicesByCategory(String category, String postalCode) {
+        if (category == null || postalCode == null) {
+            throw new IllegalArgumentException("Category and postal code must not be null");
+        }
+        var services = _servicesRepository.findByBusinessCategoryAndPostalCode(category, postalCode);
+        return services.stream().map(this::convertToDto).toList();
+    }
+
+    private RegisterServices convertToDto(Services services) {
+        RegisterServices dto = new RegisterServices();
+        dto.setUserId(services.getUserId());
+        dto.setCompanyName(services.getCompanyName());
+        dto.setCity(services.getCity());
+        dto.setBusinessCategory(services.getBusinessCategory());
+        dto.setAddress(services.getAddress());
+        // Set other fields as needed
+        return dto;
     }
 }

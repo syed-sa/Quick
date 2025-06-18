@@ -1,5 +1,5 @@
 
-package com.justsearch.backend.service;
+package com.justsearch.backend.service.Authentication;
 
 import org.springframework.http.ResponseEntity;
 

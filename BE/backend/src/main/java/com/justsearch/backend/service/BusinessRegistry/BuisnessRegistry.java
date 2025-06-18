@@ -1,8 +1,8 @@
-package com.justsearch.backend.service;
+package com.justsearch.backend.service.BusinessRegistry;
 
 import com.justsearch.backend.dto.RegisterServices;
 
-public interface RegisterServicesService {
+public interface BuisnessRegistry {
 
     void registerBusiness(RegisterServices registerServices);
 } 

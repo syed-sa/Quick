@@ -6,13 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+
 @Entity
-@Table(name = "services", uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "companyName"}))
+@Table(name = "services", uniqueConstraints = @UniqueConstraint(columnNames = { "userId", "companyName" }))
 public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
-
     public long userId;
     public String companyName;
     public String city;
@@ -21,6 +21,7 @@ public class Services {
     public String email;
     public String website;
     public String address;
+    public int postalCode;
     public String folderPath;
 
     public String getCompanyName() {
@@ -86,10 +87,20 @@ public class Services {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
     public String getFolderPath() {
         return folderPath;
     }
+
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
-}
+    }
+
+    public int getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(int postalCode) {
+        this.postalCode = postalCode;
+    }
 }
