@@ -13,6 +13,6 @@ public interface ServicesRepository extends JpaRepository<Services, Long> {
 
     boolean existsByUserIdAndCompanyName(long userId, String companyName);
 
-    List<Services> findByBusinessCategoryAndPostalCode(String businessCategory, String postalCode);
-    // 
+    List<Services> findByBusinessCategoryIdAndPostalCode(long businessCategoryId, String postalCode);
+    
 }

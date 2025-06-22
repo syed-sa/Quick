@@ -7,7 +7,7 @@ public class RegisterServices {
     public long userId;
     public String companyName;
     public String city;
-    public String businessCategory;
+    public long businessCategoryId;
     public String phone;
     public String email;
     public String website;
@@ -35,12 +35,12 @@ public class RegisterServices {
 
     }
 
-    public String getBusinessCategory() {
-        return businessCategory;
+    public long getBusinessCategoryId() {
+        return businessCategoryId;
     }
 
-    public void setBusinessCategory(String businessCategory) {
-        this.businessCategory = businessCategory;
+    public void setBusinessCategoryId(long businessCategoryId) {
+        this.businessCategoryId = businessCategoryId;
     }
 
     public String getPhone() {

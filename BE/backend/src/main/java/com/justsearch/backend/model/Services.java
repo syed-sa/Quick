@@ -16,13 +16,12 @@ public class Services {
     public long userId;
     public String companyName;
     public String city;
-    public String businessCategory;
+    public long businessCategoryId;
     public String phone;
     public String email;
     public String website;
     public String address;
-    public int postalCode;
-    public String folderPath;
+    public String postalCode;
 
     public String getCompanyName() {
         return companyName;
@@ -40,12 +39,12 @@ public class Services {
         this.city = city;
     }
 
-    public String getBusinessCategory() {
-        return businessCategory;
+    public long getBusinessCategoryId() {
+        return businessCategoryId;
     }
 
-    public void setBusinessCategory(String businessCategory) {
-        this.businessCategory = businessCategory;
+    public void setBusinessCategoryId(long businessCategoryId) {
+        this.businessCategoryId = businessCategoryId;
     }
 
     public String getPhone() {
@@ -88,19 +87,11 @@ public class Services {
         this.userId = userId;
     }
 
-    public String getFolderPath() {
-        return folderPath;
-    }
-
-    public void setFolderPath(String folderPath) {
-        this.folderPath = folderPath;
-    }
-
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 }

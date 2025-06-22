@@ -7,7 +7,11 @@ import Favorites from "./pages/Favorites";
 import UserProfile from "./pages/Profile";
 import RegisterService from "./pages/RegisterService";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react"
+import ServicesPage from "./pages/ServicePage";
+import ServiceDetailPage from "./pages/ServiceDetailPage";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
@@ -20,6 +24,8 @@ function App() {
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/favourites" element={<Favorites />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/service/:id" element={<ServiceDetailPage />} />
         {/* Add more routes as needed */}
 
          {/* Protected Route */}
@@ -33,6 +39,17 @@ function App() {
   />
       </Routes>
       <Footer />
+       <ToastContainer
+        position="top-center"
+        autoClose={3000} // 3 seconds
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
   
