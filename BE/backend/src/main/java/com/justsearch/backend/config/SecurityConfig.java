@@ -53,7 +53,7 @@ public class SecurityConfig {
                                 "/webjars/**")
                         .permitAll()
                         .requestMatchers( "/api/user/logout").authenticated()
-                        .requestMatchers("/api/user/signin", "/api/user/signup").permitAll()
+                        .requestMatchers("/api/user/refresh","/api/user/signin", "/api/user/signup").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(daoAuthenticationProvider())

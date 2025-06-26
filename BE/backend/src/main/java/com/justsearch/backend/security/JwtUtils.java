@@ -43,7 +43,7 @@ public class JwtUtils {
     public RefreshToken generateRefreshToken(long userId) 
     {
         String token = UUID.randomUUID().toString();
-        Date expiryDate = new Date(System.currentTimeMillis() + jwtExpirationMs * 2);
+        Date expiryDate = new Date(System.currentTimeMillis() + jwtExpirationMs * 30);
         RefreshToken refreshToken = new RefreshToken(token, userId, expiryDate);
         return refreshToken;
     }

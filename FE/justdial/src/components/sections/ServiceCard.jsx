@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Star, Phone, Mail, Clock, Camera } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
-const ServiceCard = ({ service, onViewDetails }) => {
+const ServiceCard = ({ service }) => {
   const [images, setImages] = useState([]);
   const [loadingImages, setLoadingImages] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const navigate = useNavigate();
+const handleViewDetails = (service, images) => {
+  navigate(`/service/${service.id}`, { state: { service,images } }); //service detail page is called here passing the service
+};
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -49,11 +53,7 @@ const ServiceCard = ({ service, onViewDetails }) => {
     }
   };
 
-  const handleViewDetails = () => {
-    if (onViewDetails) {
-      onViewDetails(service);
-    }
-  };
+
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -170,9 +170,9 @@ const ServiceCard = ({ service, onViewDetails }) => {
 
         {/* Action Button */}
         <button 
-          onClick={handleViewDetails}
-          className="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 font-medium"
-        >
+onClick={() => handleViewDetails(service, images)}          
+className="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 font-medium"
+>
           View Details
         </button>
       </div>

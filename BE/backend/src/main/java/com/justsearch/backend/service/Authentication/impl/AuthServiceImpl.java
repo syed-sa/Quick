@@ -1,4 +1,5 @@
 package com.justsearch.backend.service.Authentication.impl;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.justsearch.backend.dto.SignIn;
 import com.justsearch.backend.dto.SignupRequest;
 import com.justsearch.backend.dto.TokenResponse;
@@ -50,42 +53,38 @@ public class AuthServiceImpl implements AuthService {
         _userRepository.save(user);
     }
 
-   public ResponseEntity<?> userSignIn(SignIn request) 
-   {
-    Optional<User> userOptional = _userRepository.findByEmail(request.getEmail());
-    if (userOptional.isEmpty()) 
-    {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", "User not found");
-        errorResponse.put("error", "INVALID_EMAIL");
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(errorResponse); 
-    }
-    User user = userOptional.get();
+    public ResponseEntity<?> userSignIn(SignIn request) {
+        Optional<User> userOptional = _userRepository.findByEmail(request.getEmail());
+        if (userOptional.isEmpty()) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "User not found");
+            errorResponse.put("error", "INVALID_EMAIL");
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
+        }
+        User user = userOptional.get();
 
-    if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
-     {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Invalid password");
-        errorResponse.put("error", "INVALID_PASSWORD");
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(errorResponse);  // ← Return JSON object instead of null
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Invalid password");
+            errorResponse.put("error", "INVALID_PASSWORD");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(errorResponse); // ← Return JSON object instead of null
+        }
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(), new ArrayList<>());
+        String token = jwtUtils.generateToken(userDetails);
+        RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
+        _refreshTokenRepository.save(refreshToken);
+        TokenResponse tokenResponse = new TokenResponse(user.getName(), token, refreshToken.getToken(), user.getId());
+        return ResponseEntity.ok(tokenResponse);
     }
-    UserDetails userDetails = new org.springframework.security.core.userdetails.User
-    (user.getEmail(), user.getPassword(), new ArrayList<>());
-    String token = jwtUtils.generateToken(userDetails);
-    RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
-    _refreshTokenRepository.save(refreshToken);
-    TokenResponse tokenResponse = new TokenResponse(user.getName(), token, refreshToken.getToken(), user.getId());
-    return ResponseEntity.ok(tokenResponse);
-}
 
-    public ResponseEntity<TokenResponse> refresh(String refreshToken) 
-    {
-        if (jwtUtils.validateRefreshToken(refreshToken)) 
-        {
+    @Transactional
+    public ResponseEntity<TokenResponse> refresh(String refreshToken) {
+        if (jwtUtils.validateRefreshToken(refreshToken)) {
             long userId = jwtUtils.getUserIdFromRefreshToken(refreshToken);
             User user = _userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -94,12 +93,11 @@ public class AuthServiceImpl implements AuthService {
                     user.getPassword(), new ArrayList<>());
             String newAccessToken = jwtUtils.generateToken(userDetails);
             RefreshToken newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
-            TokenResponse tokenResponse = new TokenResponse(user.getName(), newAccessToken, newRefreshToken.getToken(), user.getId());
+            TokenResponse tokenResponse = new TokenResponse(user.getName(), newAccessToken, newRefreshToken.getToken(),
+                    user.getId());
             _refreshTokenRepository.save(newRefreshToken);
             return ResponseEntity.ok(tokenResponse);
-        } 
-        else 
-        {
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }

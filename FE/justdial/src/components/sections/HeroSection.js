@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import LocationAutocomplete from "../auth/LocationAutocomplete"; // Import the component
+import LocationAutocomplete from "../sections/LocationAutocomplete"; // Import the component
 import { useState } from "react";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; // ✅ This is correct

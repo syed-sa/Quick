@@ -58,4 +58,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+    @Override
+protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    
+    // Skip JWT processing for public endpoints like refresh, signin, signup
+    return path.equals("/api/user/refresh") ||
+           path.equals("/api/user/signin") ||
+           path.equals("/api/user/signup");
+}
+
 }
