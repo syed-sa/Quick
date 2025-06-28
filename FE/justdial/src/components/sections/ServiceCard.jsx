@@ -56,12 +56,20 @@ const handleViewDetails = (service, images) => {
 
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+  <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
       {/* Image Section */}
-      <div className="relative h-48 bg-gray-200">
+    <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden">
+         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="absolute bottom-4 left-4 text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <button 
+onClick={() => handleViewDetails(service, images)}          
+>
+          View Details
+        </button>
+      </div>
         {loadingImages ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+          <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         ) : images.length > 0 ? (
           <>
@@ -104,77 +112,29 @@ const handleViewDetails = (service, images) => {
       </div>
 
       {/* Content Section */}
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-1">
-          {service.serviceName || service.name || 'Service Name'}
+     <div className="p-6 space-y-3">
+      <h3 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition-colors">
         </h3>
+          <h3 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition-colors">
+        {service.companyName || 'Service Name'}
+      </h3>
         
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-          {service.description || 'Service description not available'}
-        </p>
+        <p className="text-gray-600 text-sm line-clamp-2">
+        {service.description || 'Professional service description goes here...'}
+      </p>
 
-        <div className="space-y-2 text-sm text-gray-600">
-          {service.address && (
-            <div className="flex items-start">
-              <MapPin className="h-4 w-4 mr-2 text-red-500 mt-0.5 flex-shrink-0" />
-              <span className="line-clamp-2">{service.address}</span>
-            </div>
-          )}
-          
-          {service.phoneNumber && (
-            <div className="flex items-center">
-              <Phone className="h-4 w-4 mr-2 text-green-500 flex-shrink-0" />
-              <a 
-                href={`tel:${service.phoneNumber}`}
-                className="hover:text-green-600 transition-colors"
-              >
-                {service.phoneNumber}
-              </a>
-            </div>
-          )}
-          
-          {service.email && (
-            <div className="flex items-center">
-              <Mail className="h-4 w-4 mr-2 text-blue-500 flex-shrink-0" />
-              <a 
-                href={`mailto:${service.email}`}
-                className="hover:text-blue-600 transition-colors line-clamp-1"
-              >
-                {service.email}
-              </a>
-            </div>
-          )}
-          
-          {service.workingHours && (
-            <div className="flex items-center">
+     <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2 text-purple-500 flex-shrink-0" />
-              <span className="line-clamp-1">{service.workingHours}</span>
+              <span className="line-clamp-1">{service.workingHours||"9-5"}</span>
             </div>
-          )}
+        <span className="text-sm text-gray-500">
+          ⭐ {service.rating || '4.8'}
+        </span>
         </div>
 
-        {/* Rating Section */}
-        {service.rating && (
-          <div className="flex items-center mt-3 pt-3 border-t border-gray-100">
-            <div className="flex items-center">
-              <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span className="ml-1 text-sm font-medium">{service.rating}</span>
-            </div>
-            {service.reviewCount && (
-              <span className="ml-2 text-sm text-gray-500">
-                ({service.reviewCount} review{service.reviewCount !== 1 ? 's' : ''})
-              </span>
-            )}
-          </div>
-        )}
-
         {/* Action Button */}
-        <button 
-onClick={() => handleViewDetails(service, images)}          
-className="w-full mt-4 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 font-medium"
->
-          View Details
-        </button>
+       
       </div>
     </div>
   );
