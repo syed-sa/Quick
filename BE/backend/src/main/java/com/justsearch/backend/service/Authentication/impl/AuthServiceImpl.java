@@ -12,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.justsearch.backend.dto.SignIn;
-import com.justsearch.backend.dto.SignupRequest;
-import com.justsearch.backend.dto.TokenResponse;
+import com.justsearch.backend.dto.SignInDto;
+import com.justsearch.backend.dto.SignupRequestDto;
+import com.justsearch.backend.dto.TokenResponseDto;
 import com.justsearch.backend.model.RefreshToken;
 import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.RefreshTokenRepository;
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         this._refreshTokenRepository = refreshTokenRepository;
     }
 
-    public void userSignUp(SignupRequest signUpRequest) {
+    public void userSignUp(SignupRequestDto signUpRequest) {
 
         if (_userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email already taken");
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         _userRepository.save(user);
     }
 
-    public ResponseEntity<?> userSignIn(SignIn request) {
+    public ResponseEntity<?> userSignIn(SignInDto request) {
         Optional<User> userOptional = _userRepository.findByEmail(request.getEmail());
         if (userOptional.isEmpty()) {
             Map<String, String> errorResponse = new HashMap<>();
@@ -78,12 +78,13 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtils.generateToken(userDetails);
         RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
         _refreshTokenRepository.save(refreshToken);
-        TokenResponse tokenResponse = new TokenResponse(user.getName(), token, refreshToken.getToken(), user.getId());
+        TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), token, refreshToken.getToken(),
+                user.getId());
         return ResponseEntity.ok(tokenResponse);
     }
 
     @Transactional
-    public ResponseEntity<TokenResponse> refresh(String refreshToken) {
+    public ResponseEntity<TokenResponseDto> refresh(String refreshToken) {
         if (jwtUtils.validateRefreshToken(refreshToken)) {
             long userId = jwtUtils.getUserIdFromRefreshToken(refreshToken);
             User user = _userRepository.findById(userId)
@@ -93,7 +94,8 @@ public class AuthServiceImpl implements AuthService {
                     user.getPassword(), new ArrayList<>());
             String newAccessToken = jwtUtils.generateToken(userDetails);
             RefreshToken newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
-            TokenResponse tokenResponse = new TokenResponse(user.getName(), newAccessToken, newRefreshToken.getToken(),
+            TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), newAccessToken,
+                    newRefreshToken.getToken(),
                     user.getId());
             _refreshTokenRepository.save(newRefreshToken);
             return ResponseEntity.ok(tokenResponse);

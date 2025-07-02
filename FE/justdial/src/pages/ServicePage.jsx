@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ServiceCard from '../components/sections/ServiceCard';
 import api from '../components/auth/axios'; 
-import { Camera, ArrowLeft, MapPin, Search } from 'lucide-react'; 
+import { Camera, Search } from 'lucide-react'; 
 
 const ServicesPage = () => {
   const navigate = useNavigate();
@@ -79,13 +79,13 @@ const ServicesPage = () => {
   return (
     <main className="flex-grow bg-gray-50">
       {/* Header matching your current style */}
-      <header className="bg-gradient-to-r from-white via-blue-50 to-white border-b shadow-md">
+      <header className="bg-gradient-to-r from-white via-red-100 to-white border-b shadow-md">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-6 flex flex-col gap-3 sm:gap-4">
           
           {/* Back Button */}
           <button
             onClick={() => navigate('/')}
-            className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-all duration-200 group w-fit"
+            className="flex items-center text-sm font-medium text-black-500 hover:text-red-500 transition-all duration-200 group w-fit"
           >
             <svg className="w-4 h-4 mr-1 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -95,7 +95,7 @@ const ServicesPage = () => {
 
           {/* Title */}
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 tracking-tight capitalize flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-600 px-2 py-0.5 text-sm font-semibold rounded">
+            <span className="bg-red-100 text-orange-600 px-2 py-0.5 text-sm font-semibold rounded">
               {category} Services
             </span>
           </h1>

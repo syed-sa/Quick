@@ -115,7 +115,7 @@ onClick={() => handleViewDetails(service, images)}
      <div className="p-6 space-y-3">
       <h3 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition-colors">
         </h3>
-          <h3 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-bold text-lg text-gray-800 group-hover:text-orange-600 transition-colors">
         {service.companyName || 'Service Name'}
       </h3>
         
@@ -125,7 +125,7 @@ onClick={() => handleViewDetails(service, images)}
 
      <div className="flex items-center justify-between pt-2">
         <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-2 text-purple-500 flex-shrink-0" />
+              <Clock className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
               <span className="line-clamp-1">{service.workingHours||"9-5"}</span>
             </div>
         <span className="text-sm text-gray-500">

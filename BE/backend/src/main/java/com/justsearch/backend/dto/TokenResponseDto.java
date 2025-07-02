@@ -1,13 +1,13 @@
 package com.justsearch.backend.dto;
 
-public class TokenResponse {
+public class TokenResponseDto {
     private long userId;
     private String userName;
     private String accessToken;
 
     private String refreshToken;
 
-    public TokenResponse(String userName, String accessToken, String refreshToken, long userId) {
+    public TokenResponseDto(String userName, String accessToken, String refreshToken, long userId) {
         this.userName = userName;
         this.userId = userId;
         this.accessToken = accessToken;
@@ -25,6 +25,7 @@ public class TokenResponse {
     public long getUserId() {
         return userId;
     }
+
     public String getUserName() {
         return userName;
     }

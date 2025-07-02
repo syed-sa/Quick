@@ -1,7 +1,11 @@
 package com.justsearch.backend.dto;
 
-public class LogOutRequest {
+public class RefreshRequestDto {
     private String refreshToken;
+
+    public RefreshRequestDto(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public String getRefreshToken() {
         return refreshToken;

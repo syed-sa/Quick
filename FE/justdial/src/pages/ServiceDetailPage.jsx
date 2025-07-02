@@ -131,13 +131,13 @@ const ServiceDetailPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-12">
+          <div className="lg:col-span-2 space-y-8">
             {/* Business Name & Location */}
             <div className="bg-white rounded-3xl shadow-xl p-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
                 {service.companyName || "Premium Business Services"}
               </h1>
               <div className="flex items-center text-gray-600 mb-2">
@@ -150,7 +150,7 @@ const ServiceDetailPage = () => {
             </div>
 
             {/* Image Gallery */}
-            <div className="bg-white rounded-3xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-xl p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Gallery</h2>
               <div className="relative">
                 <div className="aspect-video rounded-2xl overflow-hidden bg-gray-200 mb-4">
@@ -211,7 +211,7 @@ const ServiceDetailPage = () => {
             {/* Reviews */}
             <div className="bg-white rounded-3xl shadow-xl p-8">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+                <h2 className="text-l font-bold text-gray-900">Customer Reviews</h2>
                 <div className="flex items-center space-x-2">
                   <div className="flex">{renderStars(Math.round(averageRating))}</div>
                   <span className="text-lg font-semibold text-gray-700">
@@ -225,7 +225,7 @@ const ServiceDetailPage = () => {
                   <div key={review.id} className="border-b border-gray-100 last:border-b-0 pb-6 last:pb-0">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-red-500 rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold text-lg">
                             {review.name.charAt(0)}
                           </span>
@@ -237,7 +237,7 @@ const ServiceDetailPage = () => {
                       </div>
                       <span className="text-sm text-gray-500">{review.date}</span>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                    <p className="text-0.5xl text-gray-700 leading-relaxed">{review.comment}</p>
                   </div>
                 ))}
               </div>
@@ -277,7 +277,7 @@ const ServiceDetailPage = () => {
               </div>
 
               {/* Book Service Button */}
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl shadow-xl p-8">
+              <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl shadow-xl p-8">
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
                   <p className="text-blue-100 mb-6">Book our premium services today and experience the difference.</p>
@@ -292,7 +292,7 @@ const ServiceDetailPage = () => {
               {/* Additional CTA */}
               <div className="bg-white rounded-3xl shadow-xl p-6 text-center">
                 <p className="text-gray-600 mb-4">Need a custom quote?</p>
-                <button className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
+                <button className="text-black-600 hover:text-black-700 font-semibold transition-colors duration-200">
                   Request Custom Quote →
                 </button>
               </div>

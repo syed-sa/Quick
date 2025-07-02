@@ -8,47 +8,46 @@ const Header = ({ selectedCity, setSelectedCity }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
-          {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-yellow-500">
-            <span className="text-red-500">Just</span>Search
-          </Link>
+ <header className="bg-white shadow-md">
+  <div className="w-full flex items-center justify-between px-4 md:px-8 py-4">
+    {/* Logo now fully left */}
+    <Link to="/" className="text-2xl font-bold text-yellow-500">
+      <span className="text-red-500">Just</span>Search
+    </Link>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-gray-700 focus:outline-none"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+    {/* Mobile Toggle */}
+    <button
+      onClick={() => setIsMenuOpen(!isMenuOpen)}
+      className="md:hidden text-gray-700 focus:outline-none"
+    >
+      {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+    </button>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-6">
-            <NavItems
-              user={user}
-              logout={logout}
-              selectedCity={selectedCity}
-              setSelectedCity={setSelectedCity}
-            />
-          </div>
-        </div>
+    {/* Desktop Menu */}
+    <div className="hidden md:flex items-center space-x-6">
+      <NavItems
+        user={user}
+        logout={logout}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+      />
+    </div>
+  </div>
 
-        {/* Mobile Dropdown Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white px-4 pb-4 space-y-4 border-t">
-            <NavItems
-              user={user}
-              logout={logout}
-              selectedCity={selectedCity}
-              setSelectedCity={setSelectedCity}
-              isMobile
-            />
-          </div>
-        )}
-      </div>
-    </header>
+  {/* Mobile Dropdown */}
+  {isMenuOpen && (
+    <div className="md:hidden bg-white px-4 pb-4 space-y-4 border-t">
+      <NavItems
+        user={user}
+        logout={logout}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        isMobile
+      />
+    </div>
+  )}
+</header>
+
   );
 };
 

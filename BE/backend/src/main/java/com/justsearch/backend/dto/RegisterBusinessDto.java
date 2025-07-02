@@ -2,7 +2,7 @@ package com.justsearch.backend.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class RegisterServices {
+public class RegisterBusinessDto {
 
     public long userId;
     public String companyName;
@@ -15,7 +15,7 @@ public class RegisterServices {
     public int postalCode;
     public MultipartFile[] images;
 
-    public RegisterServices() {
+    public RegisterBusinessDto() {
     }
 
     public String getCompanyName() {
@@ -90,9 +90,11 @@ public class RegisterServices {
     public void setImages(MultipartFile[] images) {
         this.images = images;
     }
+
     public int getPostalCode() {
         return postalCode;
     }
+
     public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;
     }

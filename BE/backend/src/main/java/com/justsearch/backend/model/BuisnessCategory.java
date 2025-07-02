@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class BuisnessCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    public Long id;
     public String name;
 
     public BuisnessCategory() {

@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.justsearch.backend.constants.AppConstants;
-import com.justsearch.backend.dto.RegisterServices;
+import com.justsearch.backend.dto.RegisterBusinessDto;
 import com.justsearch.backend.model.Services;
 import com.justsearch.backend.repository.CategoryRepository;
 import com.justsearch.backend.repository.ServicesRepository;
@@ -30,7 +30,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         _categoryRepository = categoryRepository;
     }
 
-    public void registerBusiness(RegisterServices registerServices) {
+    public void registerBusiness(RegisterBusinessDto registerServices) {
         if (_servicesRepository.existsByUserIdAndCompanyName(registerServices.getUserId(),
                 registerServices.getCompanyName())) {
             throw new IllegalStateException("Business has already been registered by this user.");
@@ -41,7 +41,8 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
             services.setCity(registerServices.getCity());
             services.setBusinessCategoryId(registerServices.getBusinessCategoryId());
             services.setAddress(registerServices.getAddress());
-            String folderPath = basePath + AppConstants.USER_DATA +AppConstants.IMAGE_FOLDER + registerServices.getUserId();
+            String folderPath = basePath + AppConstants.USER_DATA + AppConstants.IMAGE_FOLDER
+                    + registerServices.getUserId();
             int counter = registerServices.getImages().length;
             for (MultipartFile image : registerServices.getImages()) {
                 String fileName = String.format(AppConstants.IMAGE_TEMPLATE, counter);
@@ -62,7 +63,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         if (categoryName == null || postalCode == null) {
             throw new IllegalArgumentException("Category name and postal code must not be null");
         }
-        String businessCategoryName = categoryName.replace(" ","_").toUpperCase();
+        String businessCategoryName = categoryName.replace(" ", "_").toUpperCase();
         var businessCategory = _categoryRepository.findByName(businessCategoryName);
         if (businessCategory == null) {
             throw new IllegalArgumentException("Category not found: " + businessCategoryName);
@@ -84,7 +85,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
                     .collect(Collectors.toList());
 
             List<String> imageUrls = files.stream()
-                    .map(file -> baseUrl + "/images/" +serviceId + "/"+ file.getFileName().toString())
+                    .map(file -> baseUrl + "/images/" + serviceId + "/" + file.getFileName().toString())
                     .collect(Collectors.toList());
 
             return imageUrls;

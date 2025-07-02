@@ -3,17 +3,17 @@ package com.justsearch.backend.service.Authentication;
 
 import org.springframework.http.ResponseEntity;
 
-import com.justsearch.backend.dto.SignIn;
-import com.justsearch.backend.dto.SignupRequest;
-import com.justsearch.backend.dto.TokenResponse;
+import com.justsearch.backend.dto.SignInDto;
+import com.justsearch.backend.dto.SignupRequestDto;
+import com.justsearch.backend.dto.TokenResponseDto;
 
 public interface AuthService {
 
-    void userSignUp(SignupRequest signUpRequest);
+    void userSignUp(SignupRequestDto signUpRequest);
 
-    ResponseEntity<?> userSignIn(SignIn request);
+    ResponseEntity<?> userSignIn(SignInDto request);
 
-    ResponseEntity<TokenResponse> refresh(String refreshToken);
+    ResponseEntity<TokenResponseDto> refresh(String refreshToken);
 
     void logout(String refreshToken);
 }
