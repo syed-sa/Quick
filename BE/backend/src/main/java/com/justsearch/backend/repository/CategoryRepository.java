@@ -3,7 +3,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.justsearch.backend.model.BuisnessCategory;
 import org.springframework.lang.Nullable;
-
+import org.springframework.stereotype.Repository;
+@Repository
 public interface CategoryRepository extends JpaRepository<BuisnessCategory, Long> {
 
     // Method to find a category by its name

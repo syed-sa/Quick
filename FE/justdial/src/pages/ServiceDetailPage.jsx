@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Phone, Globe, MapPin, Star, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import api from '../components/auth/axios';
-
+import BookingCard  from '../components/sections/BookService';
 const ServiceDetailPage = () => {
   const { id } = useParams();
   const { state } = useLocation();
@@ -11,7 +11,8 @@ const ServiceDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [service, setService] = useState(state?.service || null);
   const [loading, setLoading] = useState(!state?.service);
-  const [images, setImages] = useState(state?.images||null);
+  const [images] = useState(state?.images||null);
+const [showBooking, setShowBooking] = useState(false);
 
   // Mock data for demonstration - replace with actual service data
 
@@ -244,60 +245,76 @@ const ServiceDetailPage = () => {
             </div>
           </div>
 
-          {/* Right Column - Contact & Booking */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8 space-y-8">
-              {/* Contact Information */}
-              <div className="bg-white rounded-3xl shadow-xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Information</h3>
-                <div className="space-y-4">
-                  {service.email && (
-                    <div className="flex items-center p-4 bg-blue-50 rounded-xl">
-                      <Mail className="w-5 h-5 mr-3 text-blue-500" />
-                      <a 
-                        href={`mailto:${service.email}`} 
-                        className="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
-                      >
-                        {service.email}
-                      </a>
-                    </div>
-                  )}
-                  {service.phone && (
-                    <div className="flex items-center p-4 bg-green-50 rounded-xl">
-                      <Phone className="w-5 h-5 mr-3 text-green-500" />
-                      <a 
-                        href={`tel:${service.phone}`} 
-                        className="text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
-                      >
-                        {service.phone}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Book Service Button */}
-              <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl shadow-xl p-8">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
-                  <p className="text-blue-100 mb-6">Book our premium services today and experience the difference.</p>
-                  <button className="w-full bg-white text-gray-900 font-bold py-4 px-8 rounded-2xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2">
-                    <Calendar className="w-5 h-5" />
-                    <span>Book Service Now</span>
-                  </button>
-                  <p className="text-blue-200 text-sm mt-4">Free consultation • Quick response • Professional service</p>
-                </div>
-              </div>
-
-              {/* Additional CTA */}
-              <div className="bg-white rounded-3xl shadow-xl p-6 text-center">
-                <p className="text-gray-600 mb-4">Need a custom quote?</p>
-                <button className="text-black-600 hover:text-black-700 font-semibold transition-colors duration-200">
-                  Request Custom Quote →
-                </button>
-              </div>
-            </div>
+{/* Right Column - Contact & Booking */}
+<div className="lg:col-span-1">
+  <div className="sticky top-8 space-y-8">
+    {/* Contact Information */}
+    <div className="bg-white rounded-3xl shadow-xl p-8">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Information</h3>
+      <div className="space-y-4">
+        {service.email && (
+          <div className="flex items-center p-4 bg-blue-50 rounded-xl">
+            <Mail className="w-5 h-5 mr-3 text-blue-500" />
+            <a
+              href={`mailto:${service.email}`}
+              className="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
+            >
+              {service.email}
+            </a>
           </div>
+        )}
+        {service.phone && (
+          <div className="flex items-center p-4 bg-green-50 rounded-xl">
+            <Phone className="w-5 h-5 mr-3 text-green-500" />
+            <a
+              href={`tel:${service.phone}`}
+              className="text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
+            >
+              {service.phone}
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Book Service Button */}
+    <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl shadow-xl p-8">
+      <div className="text-center">
+        <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
+        <p className="text-blue-100 mb-6">
+          Book our premium services today and experience the difference.
+        </p>
+        <button
+          onClick={() => setShowBooking(true)}
+          className="w-full bg-white text-gray-900 font-bold py-4 px-8 rounded-2xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
+        >
+          <Calendar className="w-5 h-5" />
+          <span>Book Service Now</span>
+        </button>
+        <p className="text-blue-200 text-sm mt-4">
+          Free consultation • Quick response • Professional service
+        </p>
+      </div>
+    </div>
+
+    {/* Booking Modal - Shown Conditionally */}
+    {showBooking && (
+      <BookingCard
+        userId={parseInt(localStorage.getItem('userId'), 10)}
+        serviceId={service.id}
+        onClose={() => setShowBooking(false)}
+      />
+    )}
+
+    {/* Additional CTA */}
+    <div className="bg-white rounded-3xl shadow-xl p-6 text-center">
+      <p className="text-gray-600 mb-4">Need a custom quote?</p>
+      <button className="text-black-600 hover:text-black-700 font-semibold transition-colors duration-200">
+        Request Custom Quote →
+      </button>
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </div>

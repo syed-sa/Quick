@@ -1,6 +1,8 @@
 package com.justsearch.backend.service.ServiceBooking;
 
-public class BookService {
-    
-    
-}
+import com.justsearch.backend.dto.BookServiceDto;
+
+public interface BookService {
+
+     void createBookingRequest(BookServiceDto bookserviceDto);
+} 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Star, Phone, Mail, Clock, Camera } from "lucide-react";
+import { Clock, Camera } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 const ServiceCard = ({ service }) => {
