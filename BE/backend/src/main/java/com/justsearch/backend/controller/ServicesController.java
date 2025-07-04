@@ -1,21 +1,19 @@
 package com.justsearch.backend.controller;
-
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.justsearch.backend.dto.RegisterBusinessDto;
-import com.justsearch.backend.model.Services;
+import com.justsearch.backend.dto.ServiceDto;
 import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/api/services")
+@RequestMapping("api/services")
 
 public class ServicesController {
 
@@ -38,7 +36,7 @@ public class ServicesController {
     @GetMapping("/getByCategory")
     public ResponseEntity<?> getServicesByCategory(@RequestParam String categoryName, @RequestParam String postalCode) {
         try {
-            List<Services> services = _registerServicesService.getServicesByCategory(categoryName, postalCode);
+            List<ServiceDto> services = _registerServicesService.getServicesByCategory(categoryName, postalCode);
             return ResponseEntity.ok(services);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error fetching services: " + e.getMessage());
@@ -57,5 +55,15 @@ public class ServicesController {
             }
         }
 
+    }
+
+    @GetMapping("/getservice/userId/{userId}")
+    public ResponseEntity<?> getServicesByUserId(@PathVariable long userId) {
+        try {
+            List<ServiceDto> services = _registerServicesService.getServiceByUserId(userId);
+            return ResponseEntity.ok(services);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching services: " + e.getMessage());
+        }
     }
 }

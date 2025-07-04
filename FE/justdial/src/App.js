@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react"
 import ServicesPage from "./pages/ServicePage";
 import ServiceDetailPage from "./pages/ServiceDetailPage";
-
+import BusinessProfile from "./pages/BuisnessProfile";
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
 
@@ -26,6 +26,7 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/service/:id" element={<ServiceDetailPage />} />
+        <Route path="/business-profile" element={<BusinessProfile/>} />
         {/* Add more routes as needed */}
 
          {/* Protected Route */}

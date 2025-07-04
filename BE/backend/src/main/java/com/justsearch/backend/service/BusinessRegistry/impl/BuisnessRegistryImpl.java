@@ -12,6 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.RegisterBusinessDto;
+import com.justsearch.backend.dto.ServiceDto;
+import com.justsearch.backend.dto.mapper.ServiceMapper;
 import com.justsearch.backend.model.Services;
 import com.justsearch.backend.repository.CategoryRepository;
 import com.justsearch.backend.repository.ServicesRepository;
@@ -21,12 +23,15 @@ import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
 public class BuisnessRegistryImpl implements BuisnessRegistry {
     private ServicesRepository _servicesRepository;
     private CategoryRepository _categoryRepository;
-
+    private final ServiceMapper serviceMapper;
     @Value("${basepath}")
     private String basePath;
 
-    public BuisnessRegistryImpl(ServicesRepository servicesRepository, CategoryRepository categoryRepository) {
+    public BuisnessRegistryImpl(ServicesRepository servicesRepository, CategoryRepository categoryRepository,
+            ServiceMapper serviceMapper) {
         _servicesRepository = servicesRepository;
+        _categoryRepository = categoryRepository;
+        this.serviceMapper = serviceMapper;
         _categoryRepository = categoryRepository;
     }
 
@@ -59,7 +64,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         }
     }
 
-    public List<Services> getServicesByCategory(String categoryName, String postalCode) {
+    public List<ServiceDto> getServicesByCategory(String categoryName, String postalCode) {
         if (categoryName == null || postalCode == null) {
             throw new IllegalArgumentException("Category name and postal code must not be null");
         }
@@ -69,7 +74,8 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
             throw new IllegalArgumentException("Category not found: " + businessCategoryName);
         }
         Long categoryId = businessCategory.getId();
-        List<Services> services = _servicesRepository.findByBusinessCategoryIdAndPostalCode(categoryId, postalCode);
+        List<ServiceDto> services = serviceMapper
+                .toDtoList(_servicesRepository.findByBusinessCategoryIdAndPostalCode(categoryId, postalCode));
         return services;
     }
 
@@ -93,6 +99,14 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve images for service ID: " + serviceId, e);
         }
-
     }
+
+    public List<ServiceDto> getServiceByUserId(Long userId) {
+        if (userId <= 0) {
+            throw new IllegalArgumentException("User ID must be greater than zero");
+        }
+        List<Services> services = _servicesRepository.findAllByUserId(userId);
+        return serviceMapper.toDtoList(services);
+    }
+
 }

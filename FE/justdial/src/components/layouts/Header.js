@@ -89,7 +89,19 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
                 to="/profile"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
               >
-                Profile
+                User Profile
+              </Link>
+              <Link
+                to="/business-profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+              >
+                Business Profile
+              </Link>
+              <Link
+                to="/"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+              >
+                Bookings
               </Link>
               <button
                 onClick={logout}
@@ -103,13 +115,19 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
             <>
               <Link
                 to="/profile"
-                className="block text-sm text-gray-700 hover:text-gray-900"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
               >
                 Profile
               </Link>
+              <Link
+                to="/BusinessProfile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+              >
+                Business Profile
+              </Link>
               <button
                 onClick={logout}
-                className="block text-sm text-gray-700 hover:text-gray-900"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
               >
                 Logout
               </button>
@@ -126,7 +144,7 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
         </Link>
       )}
 
-      <a href="#" className="text-gray-600 hover:text-gray-900 flex items-center">
+      <a href="/notifications" className="text-gray-600 hover:text-gray-900 flex items-center">
         <Bell className="h-5 w-5" />
       </a>
 
