@@ -109,4 +109,14 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         return serviceMapper.toDtoList(services);
     }
 
+    public void updateService(ServiceDto service) {
+        if (service == null || service.getId() == 0) {
+            throw new IllegalArgumentException("Service and Service ID must not be null");
+        }
+        if (!_servicesRepository.existsById(service.getId())) {
+            throw new IllegalArgumentException("Service with ID " + service.getId() + " does not exist");
+        }
+        _servicesRepository.save(serviceMapper.toEntity(service));
+    }
+
 }

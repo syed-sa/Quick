@@ -13,6 +13,7 @@ import { useState } from "react"
 import ServicesPage from "./pages/ServicePage";
 import ServiceDetailPage from "./pages/ServiceDetailPage";
 import BusinessProfile from "./pages/BuisnessProfile";
+import BookingManagement  from "./components/sections/BookingManagement"; 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/service/:id" element={<ServiceDetailPage />} />
         <Route path="/business-profile" element={<BusinessProfile/>} />
+        <Route path="/booking-management" element={<BookingManagement />} />
         {/* Add more routes as needed */}
 
          {/* Protected Route */}

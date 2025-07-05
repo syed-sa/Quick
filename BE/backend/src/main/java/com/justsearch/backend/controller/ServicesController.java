@@ -9,6 +9,8 @@ import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -61,9 +63,24 @@ public class ServicesController {
     public ResponseEntity<?> getServicesByUserId(@PathVariable long userId) {
         try {
             List<ServiceDto> services = _registerServicesService.getServiceByUserId(userId);
+            if (services.isEmpty()) {
+                return ResponseEntity.status(404).body("No services found for user ID: " + userId);
+            }
             return ResponseEntity.ok(services);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error fetching services: " + e.getMessage());
         }
     }
+
+    @PutMapping("/updateService")
+    public ResponseEntity<?> updateService(@RequestBody ServiceDto serviceDto) {
+        try {
+            _registerServicesService.updateService(serviceDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error updating service: " + e.getMessage());
+        }
+    }
+
+    
 }

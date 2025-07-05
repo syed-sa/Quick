@@ -22,7 +22,6 @@ const BusinessProfile = () => {
         }
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching business profile:', error);
         setLoading(false);
       }
     };
@@ -44,10 +43,16 @@ const BusinessProfile = () => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("Saving business:", formData);
     setIsEditing(false);
-    // Call API here to save the updated business details
+    await api.put(`services/updateService`, formData)
+      .then(response => {
+        console.log("Business updated successfully:", response.data);
+      })
+      .catch(error => {
+        console.error("Error updating business:", error);
+      });
   };
 
   const handleEdit = () => {

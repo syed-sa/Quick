@@ -84,4 +84,7 @@ public class ServiceDto {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+    public long getId() {
+        return id;
+    }
 }
