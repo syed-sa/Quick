@@ -1,5 +1,7 @@
 package com.justsearch.backend.controller;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,5 +29,14 @@ public class BookServiceController {
             return ResponseEntity.internalServerError().body("Error Booking service: " + e.getMessage());
         }
     }
+@GetMapping("/GetBookingRequests/{userId}")
+    public ResponseEntity<?> getBookingRequests(@PathVariable long userId) {
+        try {
+            return ResponseEntity.ok(_bookService.getBookingRequests(userId));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching booking requests: " + e.getMessage());
+        }
+    }
 
+    
 }

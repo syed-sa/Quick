@@ -1,17 +1,19 @@
 package com.justsearch.backend.dto;
 
+import lombok.Data;
 
+@Data
 public class ServiceDto {
-    public long id;
-    public long userId;
-    public String companyName;
-    public String city;
-    public long businessCategoryId;
-    public String phone;
-    public String email;
-    public String website;
-    public String address;
-    public String postalCode;
+    private long id;
+    private long userId;
+    private String companyName;
+    private String city;
+    private long businessCategoryId;
+    private String phone;
+    private String email;
+    private String website;
+    private String address;
+    private String postalCode;
 
     public String getCompanyName() {
         return companyName;

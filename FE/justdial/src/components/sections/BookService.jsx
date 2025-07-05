@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../auth/axios';
 
-const BookingCard = ({ userId, serviceId, onClose }) => {
+const BookingCard = ({ customerId, serviceId, serviceName, onClose }) => {
   const [date, setDate] = useState('');
   const [fromTime, setFromTime] = useState('');
   const [toTime, setToTime] = useState('');
   const [loading, setLoading] = useState(false);
+  const [description, setDescription] = useState('');
 
   const timeOptions = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 
@@ -18,7 +19,7 @@ const BookingCard = ({ userId, serviceId, onClose }) => {
     }
     setLoading(true);
     try {
-      const bookingDetails = { userId, serviceId, timeSlot: `${fromTime} - ${toTime}` };
+      const bookingDetails = { customerId, serviceId, serviceName, timeSlot: `${fromTime} - ${toTime}`,bookingDate : date , description };
       const token = localStorage.getItem('token');
       console.log("Booking payload", JSON.stringify(bookingDetails));
      const res = await api.post('bookservice/RequestBooking', bookingDetails, {
@@ -61,6 +62,12 @@ const BookingCard = ({ userId, serviceId, onClose }) => {
             </select>
           </div>
         </div>
+        <div className="flex gap-4 mb-9">
+        <div className="flex-1">
+            <label className="block mb-1">Description</label>
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full border p-2 rounded-lg"/>
+          </div>
+          </div>
         <button onClick={handleSubmit}
           disabled={loading}
           className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 disabled:opacity-50">

@@ -300,8 +300,9 @@ const [showBooking, setShowBooking] = useState(false);
     {/* Booking Modal - Shown Conditionally */}
     {showBooking && (
       <BookingCard
-        userId={parseInt(localStorage.getItem('userId'), 10)}
+        customerId={parseInt(localStorage.getItem('userId'), 10)}
         serviceId={service.id}
+        serviceName={service.companyName}
         onClose={() => setShowBooking(false)}
       />
     )}

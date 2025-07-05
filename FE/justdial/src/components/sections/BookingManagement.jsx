@@ -1,3 +1,4 @@
+import api from '../auth/axios';
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar, 
@@ -27,12 +28,28 @@ const BookingManagement = () => {
   const [processingId, setProcessingId] = useState(null);
 
   // Mock data for demonstration
+
   useEffect(() => {
-    const mockBookings = [
-      {
-        id: 1,
-        customerName: 'Rahul Sharma',
-        customerPhone: '+91 9876543210',
+    const userId = localStorage.getItem('userId');
+    const fetchData = async () => {
+      try {
+        const res = await api.get(`bookservice/GetBookingRequests/${userId}`)
+        if (res.status === 200) {
+          const data = res.data;
+          setBookings(data);
+        setFilteredBookings(data);
+      }
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    }
+  };
+  fetchData();
+
+  const mockBookings = [
+    {
+      id: 1,
+          customerName: 'Rahul Sharma',
+          customerPhone: '+91 9876543210',
         customerEmail: 'rahul.sharma@email.com',
         serviceName: 'Home Cleaning Service',
         date: '2025-01-15',

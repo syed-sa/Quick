@@ -6,7 +6,7 @@ import com.justsearch.backend.model.Services;
 
 @Mapper(componentModel = "spring")
 public interface ServiceMapper {
-    ServiceDto toDto(Services services);
+    ServiceDto toDto(Services service);
     List<ServiceDto> toDtoList(List<Services> services);
     Services toEntity(ServiceDto serviceDto);
 }
