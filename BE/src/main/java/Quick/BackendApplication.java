@@ -1,0 +1,28 @@
+package Quick;
+
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.security.access.AccessDeniedException;
+
+import Quick.config.JwtConfig;
+
+@SpringBootApplication
+@EnableConfigurationProperties(JwtConfig.class)
+public class BackendApplication {
+
+	public static void main(String[] args) {
+		try {
+   SpringApplication.run(BackendApplication.class, args);
+	}
+ catch (AccessDeniedException ace) {
+    ace.printStackTrace();
+    throw ace;
+
+		
+
+}
+	}
+
+}

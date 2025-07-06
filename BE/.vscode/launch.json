@@ -8,7 +8,8 @@
             "mainClass": "com.justsearch.backend.BackendApplication",
             "projectName": "backend",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": "-Djava.security.policy=all.policy"
         }
     ]
 }
