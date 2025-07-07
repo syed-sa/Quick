@@ -6,7 +6,6 @@ import Quick.model.BookingDetails;
 @Repository
 public interface BookingDetailsRepository extends JpaRepository<BookingDetails,Long> {
 
-
-
     List<BookingDetails> findAllByServiceProviderId(long userId);
+    List<BookingDetails> findAllByCustomerId(long userId);
 } 

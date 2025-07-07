@@ -17,7 +17,6 @@ public class BookServiceDto {
     public String phone;
     public String email;
     public String description;
-    public String bookingType;
 
     public BookServiceDto() {
         // Default constructor needed for Jackson
@@ -118,11 +117,5 @@ public class BookServiceDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-    public String getBookingType() {
-        return bookingType;
-    }
-    public void setBookingType(String bookingType) {
-        this.bookingType = bookingType;
     }
 }

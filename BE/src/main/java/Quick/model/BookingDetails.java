@@ -23,7 +23,6 @@ public class BookingDetails {
     public String description;
     public String phone;
     public String email;
-    public String bookingType;
 
     public Long getId() {
         return id;
@@ -117,12 +116,4 @@ public class BookingDetails {
         this.email = email;
     }
 
-    public String getBookingType() {
-        return bookingType;
-    }
-
-    public void setBookingType(String bookingType) {
-        this.bookingType = bookingType;
-
-}
 }

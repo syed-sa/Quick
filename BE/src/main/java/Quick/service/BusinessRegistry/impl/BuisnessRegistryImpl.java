@@ -33,6 +33,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
     }
 
     public void registerBusiness(RegisterBusinessDto registerServices) {
+        try{
         if (_servicesRepository.existsByUserIdAndCompanyName(registerServices.getUserId(),
                 registerServices.getCompanyName())) {
             throw new IllegalStateException("Business has already been registered by this user.");
@@ -43,22 +44,27 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
             services.setCity(registerServices.getCity());
             services.setBusinessCategoryId(registerServices.getBusinessCategoryId());
             services.setAddress(registerServices.getAddress());
+            services.setEmail(registerServices.getEmail());
+            services.setPhone(registerServices.getPhone());
             String folderPath = basePath + AppConstants.USER_DATA + AppConstants.IMAGE_FOLDER
                     + registerServices.getUserId();
+            if (registerServices.getImages() != null && registerServices.getImages().length > 0) {
             int counter = registerServices.getImages().length;
             for (MultipartFile image : registerServices.getImages()) {
                 String fileName = String.format(AppConstants.IMAGE_TEMPLATE, counter);
                 Path filePath = Path.of(folderPath, fileName);
                 counter--;
-                try {
-                    Files.createDirectories(filePath.getParent());
+                Files.createDirectories(filePath.getParent());
                     Files.copy(image.getInputStream(), filePath);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed to save image: " + fileName, e);
-                }
+            }
+               
             }
             _servicesRepository.save(services);
         }
+    }
+         catch (Exception e) {
+                    throw new RuntimeException("Failed to save business: " +  e);
+                }
     }
 
     public List<ServiceDto> getServicesByCategory(String categoryName, String postalCode) {

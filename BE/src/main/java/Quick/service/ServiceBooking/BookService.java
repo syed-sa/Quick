@@ -6,4 +6,5 @@ public interface BookService {
 
      void createBookingRequest(BookServiceDto bookserviceDto);
      List<BookServiceDto> getBookingRequests(long userId);
+     List<BookServiceDto> getMyBookings(long userId);
 } 

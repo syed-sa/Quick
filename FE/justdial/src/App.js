@@ -14,6 +14,7 @@ import ServicesPage from "./pages/ServicePage";
 import ServiceDetailPage from "./pages/ServiceDetailPage";
 import BusinessProfile from "./pages/BuisnessProfile";
 import BookingManagement  from "./components/sections/BookingManagement"; 
+import NotificationPage  from "./pages/Notification"; 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/service/:id" element={<ServiceDetailPage />} />
         <Route path="/business-profile" element={<BusinessProfile/>} />
         <Route path="/booking-management" element={<BookingManagement />} />
+        <Route path="/notifications" element={<NotificationPage />} />
         {/* Add more routes as needed */}
 
          {/* Protected Route */}

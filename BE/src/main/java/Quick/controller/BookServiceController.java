@@ -37,6 +37,12 @@ public class BookServiceController {
             return ResponseEntity.internalServerError().body("Error fetching booking requests: " + e.getMessage());
         }
     }
-
-    
+    @GetMapping("/GetMyBookings/{userId}")
+    public ResponseEntity<?> getMyBookings(@PathVariable long userId) {
+        try {
+            return ResponseEntity.ok(_bookService.getMyBookings(userId));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching my bookings: " + e.getMessage());
+        }
+    }
 }

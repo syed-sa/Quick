@@ -36,14 +36,16 @@ const UnifiedBookingManagement = () => {
       try {
         const userId = localStorage.getItem('userId');
         const res = await api.get(`bookservice/GetBookingRequests/${userId}`);
-        
+        const myBookingsRes = await api.get(`bookservice/GetMyBookings/${userId}`);
+
         if (res.status === 200) {
-          const data = res.data;
+          const receivedBookings = res.data;
+          const myBookings = myBookingsRes.data;
           
           // Separate bookings by type
           const categorizedBookings = {
-            received: data.filter(booking => booking.bookingType === 'received'),
-            made: data.filter(booking => booking.bookingType === 'made')
+            received: receivedBookings,
+            made: myBookings
           };
           
           setTimeout(() => {
