@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class BookServiceDto {
 
-     public Long id;
+    public Long id;
     public Long serviceId;
     public Long customerId;
     public Long serviceProviderId;
@@ -14,7 +14,10 @@ public class BookServiceDto {
     public LocalDate bookingDate;
     public String timeSlot;
     public String bookingStatus;
+    public String phone;
+    public String email;
     public String description;
+    public String bookingType;
 
     public BookServiceDto() {
         // Default constructor needed for Jackson
@@ -67,34 +70,59 @@ public class BookServiceDto {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public Long getId() {
-    return id;
-}
+        return id;
+    }
 
-public void setId(Long id) {
-    this.id = id;
-}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-public Long getServiceProviderId() {
-    return serviceProviderId;
-}
+    public Long getServiceProviderId() {
+        return serviceProviderId;
+    }
 
-public void setServiceProviderId(Long serviceProviderId) {
-    this.serviceProviderId = serviceProviderId;
-}
+    public void setServiceProviderId(Long serviceProviderId) {
+        this.serviceProviderId = serviceProviderId;
+    }
 
-public LocalDateTime getCreatedAt() {
-    return createdAt;
-}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
+    public String getPhone() {
+        return phone;
+
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getBookingType() {
+        return bookingType;
+    }
+    public void setBookingType(String bookingType) {
+        this.bookingType = bookingType;
+    }
 }

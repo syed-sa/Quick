@@ -10,8 +10,10 @@ import Quick.constants.AppConstants;
 import Quick.dto.BookServiceDto;
 import Quick.repository.BookingDetailsRepository;
 import Quick.repository.ServicesRepository;
+import Quick.repository.UserRepository;
 import Quick.service.ServiceBooking.BookService;
 import Quick.model.BookingDetails;
+import Quick.model.User;
 
 
 
@@ -21,11 +23,13 @@ public class BookServiceImpl implements BookService {
     private BookingDetailsRepository _bookingDetailsRepository;
     private ServicesRepository _servicesRepository;
     private ModelMapper _bookingDetailsMapper;
+    private UserRepository _userRepository;
 
     public BookServiceImpl(BookingDetailsRepository bookingDetailsRepository, ServicesRepository servicesRepository,
-            ModelMapper bookingDetailsMapper) {
+            ModelMapper bookingDetailsMapper, UserRepository userRepository) {
         _bookingDetailsRepository = bookingDetailsRepository;
         _servicesRepository = servicesRepository;
+        _userRepository = userRepository;
         _bookingDetailsMapper = bookingDetailsMapper;
     }
 
@@ -33,6 +37,7 @@ public class BookServiceImpl implements BookService {
         if (bookserviceDto == null) {
             throw new IllegalArgumentException("service must not be null");
         }
+        User user = _userRepository.findById(bookserviceDto.getCustomerId()).orElseThrow(() -> new IllegalArgumentException("Invalid customer ID"));
         long serviceProviderId = _servicesRepository.findById(bookserviceDto.getServiceId()).get().userId;
         BookingDetails bookingDetails = new BookingDetails();
         System.out.println(bookserviceDto.getDescription());
@@ -45,6 +50,8 @@ public class BookServiceImpl implements BookService {
         bookingDetails.bookingStatus = AppConstants.BOOKING_STATUS_PENDING;
         bookingDetails.description = bookserviceDto.getDescription();
         bookingDetails.createdAt = LocalDateTime.now();
+        bookingDetails.phone = user.getPhone();
+        bookingDetails.email = user.getEmail();
         _bookingDetailsRepository.save(bookingDetails);
 
     }
