@@ -17,7 +17,6 @@ import {
   XCircle,
   Store,
   UserCheck,
-  ArrowRight,
   Building
 } from 'lucide-react';
 
@@ -96,50 +95,19 @@ const UnifiedBookingManagement = () => {
     setFilteredBookings(filtered);
   }, [bookings, statusFilter, searchTerm, activeTab]);
 
-  const handleAccept = async (bookingId) => {
-    setProcessingId(bookingId);
-    // Simulate API call
-    setTimeout(() => {
-      setBookings(prev => ({
-        ...prev,
-        [activeTab]: prev[activeTab].map(booking => 
-          booking.id === bookingId 
-            ? { ...booking, bookingStatus: 'accepted' }
-            : booking
-        )
-      }));
-      setProcessingId(null);
-    }, 1000);
-  };
 
-  const handleReject = async (bookingId) => {
-    setProcessingId(bookingId);
-    setTimeout(() => {
-      setBookings(prev => ({
-        ...prev,
-        [activeTab]: prev[activeTab].map(booking => 
-          booking.id === bookingId 
-            ? { ...booking, bookingStatus: 'rejected' }
-            : booking
-        )
-      }));
-      setProcessingId(null);
-    }, 1000);
-  };
+  const handleStatus = async (bookingId, newStatus) => {
+    try {
+      setProcessingId(bookingId);
 
-  const handleCancel = async (bookingId) => {
-    setProcessingId(bookingId);
-    setTimeout(() => {
-      setBookings(prev => ({
-        ...prev,
-        [activeTab]: prev[activeTab].map(booking => 
-          booking.id === bookingId 
-            ? { ...booking, bookingStatus: 'cancelled' }
-            : booking
-        )
-      }));
+      await api.post(`/bookservice/UpdateBookingStatus/${bookingId}`, {
+        bookingStatus: newStatus, // e.g. 'cancelled', 'approved'
+      });
+    } catch (error) {
+      console.error("Failed to update booking status:", error);
+    } finally {
       setProcessingId(null);
-    }, 1000);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -409,7 +377,7 @@ const UnifiedBookingManagement = () => {
                           {activeTab === 'received' && booking.bookingStatus === 'pending' && (
                             <>
                               <button
-                                onClick={() => handleAccept(booking.id)}
+                                onClick={() => handleStatus(booking.id, 'accepted')}
                                 disabled={processingId === booking.id}
                                 className="inline-flex items-center px-3 py-1 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
                               >
@@ -417,7 +385,7 @@ const UnifiedBookingManagement = () => {
                                 {processingId === booking.id ? 'Processing...' : 'Accept'}
                               </button>
                               <button
-                                onClick={() => handleReject(booking.id)}
+                                onClick={() => handleStatus(booking.id, 'rejected')}
                                 disabled={processingId === booking.id}
                                 className="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                               >
@@ -430,7 +398,7 @@ const UnifiedBookingManagement = () => {
                           {/* Actions for received bookings (cancel accepted) */}
                           {activeTab === 'received' && booking.bookingStatus === 'accepted' && (
                             <button
-                              onClick={() => handleCancel(booking.id)}
+                              onClick={() => handleStatus(booking.id, 'cancelled')}
                               disabled={processingId === booking.id}
                               className="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                             >
@@ -442,7 +410,7 @@ const UnifiedBookingManagement = () => {
                           {/* Actions for made bookings (customer) */}
                           {activeTab === 'made' && booking.bookingStatus === 'pending' && (
                             <button
-                              onClick={() => handleCancel(booking.id)}
+                              onClick={() => handleStatus(booking.id)}
                               disabled={processingId === booking.id}
                               className="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                             >

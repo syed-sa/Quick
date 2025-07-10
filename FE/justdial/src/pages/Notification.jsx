@@ -1,7 +1,16 @@
 import { useState } from "react";
-import { Bell, Check, X, Clock, Calendar, Settings, Mail, Smartphone } from "lucide-react";
+import {
+  Bell,
+  Check,
+  X,
+  Clock,
+  Calendar,
+  Settings,
+  Mail,
+  Smartphone,
+} from "lucide-react";
 import api from "../components/auth/axios";
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from "date-fns";
 
 import { useEffect } from "react";
 const NotificationPage = () => {
@@ -9,40 +18,44 @@ const NotificationPage = () => {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      type: "booking_request",
+      type: "requested",
       title: "New Booking Request",
-      message: "John Doe has requested a booking for AC Repair service on Dec 15, 2024",
+      message:
+        "John Doe has requested a booking for AC Repair service on Dec 15, 2024",
       timestamp: "2 hours ago",
       isRead: false,
-      priority: "high"
+      priority: "high",
     },
     {
       id: 2,
-      type: "booking_accepted",
+      type: "accepted",
       title: "Booking Confirmed",
-      message: "Your booking for Plumbing service has been confirmed by ABC Services",
+      message:
+        "Your booking for Plumbing service has been confirmed by ABC Services",
       timestamp: "5 hours ago",
       isRead: true,
-      priority: "medium"
+      priority: "medium",
     },
     {
       id: 3,
-      type: "booking_rejected",
+      type: "rejected",
       title: "Booking Declined",
-      message: "Your booking request for Electrical work has been declined. Please try another service provider.",
+      message:
+        "Your booking request for Electrical work has been declined. Please try another service provider.",
       timestamp: "1 day ago",
       isRead: false,
-      priority: "medium"
+      priority: "medium",
     },
     {
       id: 4,
       type: "reminder",
       title: "Upcoming Service",
-      message: "Reminder: Your AC Repair service is scheduled for tomorrow at 2:00 PM",
+      message:
+        "Reminder: Your AC Repair service is scheduled for tomorrow at 2:00 PM",
       timestamp: "2 days ago",
       isRead: true,
-      priority: "low"
-    }
+      priority: "low",
+    },
   ]);
 
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -61,15 +74,15 @@ const NotificationPage = () => {
     };
 
     getNotification();
-  }, []); 
+  }, []);
 
   const getNotificationIcon = (type) => {
     switch (type) {
-      case "booking_request":
+      case "requested":
         return <Calendar className="h-5 w-5 text-blue-500" />;
-      case "booking_accepted":
+      case "accepted":
         return <Check className="h-5 w-5 text-green-500" />;
-      case "booking_rejected":
+      case "rejected":
         return <X className="h-5 w-5 text-red-500" />;
       case "reminder":
         return <Clock className="h-5 w-5 text-yellow-500" />;
@@ -92,22 +105,26 @@ const NotificationPage = () => {
   };
 
   const markAsRead = (id) => {
-    setNotifications(notifications.map(notif => 
-      notif.id === id ? { ...notif, isRead: true } : notif
-    ));
+    setNotifications(
+      notifications.map((notif) =>
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    );
   };
 
   const markAllAsRead = () => {
-    setNotifications(notifications.map(notif => ({ ...notif, isRead: true })));
+    setNotifications(
+      notifications.map((notif) => ({ ...notif, isRead: true }))
+    );
   };
 
-  const filteredNotifications = notifications.filter(notif => {
+  const filteredNotifications = notifications.filter((notif) => {
     if (activeTab === "all") return true;
     if (activeTab === "unread") return !notif.isRead;
     return notif.type === activeTab;
   });
 
-  const unreadCount = notifications.filter(notif => !notif.isRead).length;
+  const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
@@ -136,7 +153,7 @@ const NotificationPage = () => {
           {[
             { key: "all", label: "All" },
             { key: "unread", label: "Unread" },
-          ].map(tab => (
+          ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
@@ -162,10 +179,12 @@ const NotificationPage = () => {
             </div>
           ) : (
             <div className="space-y-3">
-              {filteredNotifications.map(notification => (
+              {filteredNotifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(notification.priority)} p-4 hover:shadow-md transition-shadow ${
+                  className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(
+                    notification.priority
+                  )} p-4 hover:shadow-md transition-shadow ${
                     !notification.isRead ? "bg-blue-50" : ""
                   }`}
                 >
@@ -173,22 +192,27 @@ const NotificationPage = () => {
                     <div className="flex items-start space-x-3">
                       {getNotificationIcon(notification.notificationType)}
                       <div className="flex-1 min-w-0">
-                        <h3 className={`text-sm font-medium ${
-                          !notification.isRead ? "text-gray-900" : "text-gray-700"
-                        }`}>
+                        <h3
+                          className={`text-sm font-medium ${
+                            !notification.isRead
+                              ? "text-gray-900"
+                              : "text-gray-700"
+                          }`}
+                        >
                           {notification.title}
                         </h3>
                         <p className="text-sm text-gray-600 mt-1">
                           {notification.message}
                         </p>
-                       <p className="text-xs text-gray-500 mt-2">
-  {notification.timestamp && !isNaN(new Date(notification.timestamp)) ? (
-    formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })
-  ) : (
-    "Invalid date"
-  )}
-</p>
-
+                        <p className="text-xs text-gray-500 mt-2">
+                          {notification.timestamp &&
+                          !isNaN(new Date(notification.timestamp))
+                            ? formatDistanceToNow(
+                                new Date(notification.timestamp),
+                                { addSuffix: true }
+                              )
+                            : "Invalid date"}
+                        </p>
                       </div>
                     </div>
                     {!notification.isRead && (
@@ -212,12 +236,14 @@ const NotificationPage = () => {
             <Settings className="h-5 w-5 mr-2" />
             Notification Settings
           </h2>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700">Email Notifications</span>
+                <span className="text-sm text-gray-700">
+                  Email Notifications
+                </span>
               </div>
               <button
                 onClick={() => setEmailNotifications(!emailNotifications)}
@@ -236,7 +262,9 @@ const NotificationPage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Smartphone className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700">Push Notifications</span>
+                <span className="text-sm text-gray-700">
+                  Push Notifications
+                </span>
               </div>
               <button
                 onClick={() => setPushNotifications(!pushNotifications)}
@@ -254,7 +282,9 @@ const NotificationPage = () => {
           </div>
 
           <div className="mt-6 pt-4 border-t">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Notification Types</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">
+              Notification Types
+            </h3>
             <div className="space-y-2 text-xs text-gray-600">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
