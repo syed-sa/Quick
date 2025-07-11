@@ -23,7 +23,7 @@ const NotificationPage = () => {
       message:
         "John Doe has requested a booking for AC Repair service on Dec 15, 2024",
       timestamp: "2 hours ago",
-      isRead: false,
+      read: false,
       priority: "high",
     },
     {
@@ -33,7 +33,7 @@ const NotificationPage = () => {
       message:
         "Your booking for Plumbing service has been confirmed by ABC Services",
       timestamp: "5 hours ago",
-      isRead: true,
+      read: true,
       priority: "medium",
     },
     {
@@ -43,7 +43,7 @@ const NotificationPage = () => {
       message:
         "Your booking request for Electrical work has been declined. Please try another service provider.",
       timestamp: "1 day ago",
-      isRead: false,
+      read: false,
       priority: "medium",
     },
     {
@@ -53,7 +53,7 @@ const NotificationPage = () => {
       message:
         "Reminder: Your AC Repair service is scheduled for tomorrow at 2:00 PM",
       timestamp: "2 days ago",
-      isRead: true,
+      read: true,
       priority: "low",
     },
   ]);
@@ -104,12 +104,18 @@ const NotificationPage = () => {
     }
   };
 
-  const markAsRead = (id) => {
-    setNotifications(
-      notifications.map((notif) =>
-        notif.id === id ? { ...notif, isRead: true } : notif
-      )
-    );
+  const markAsRead = async (notificationId) => {
+    try {
+      console.log("Marking notification as read:", notificationId);
+      await api.post(`notifications/read/${notificationId}`);
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif.id === notificationId ? { ...notif, read: true } : notif
+        )
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
   };
 
   const markAllAsRead = () => {
@@ -120,11 +126,11 @@ const NotificationPage = () => {
 
   const filteredNotifications = notifications.filter((notif) => {
     if (activeTab === "all") return true;
-    if (activeTab === "unread") return !notif.isRead;
+    if (activeTab === "unread") return !notif.read;
     return notif.type === activeTab;
   });
 
-  const unreadCount = notifications.filter((notif) => !notif.isRead).length;
+  const unreadCount = notifications.filter((notif) => !notif.read).length;
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
@@ -185,7 +191,7 @@ const NotificationPage = () => {
                   className={`bg-white rounded-lg shadow-sm border-l-4 ${getPriorityColor(
                     notification.priority
                   )} p-4 hover:shadow-md transition-shadow ${
-                    !notification.isRead ? "bg-blue-50" : ""
+                    !notification.read ? "bg-blue-50" : ""
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -194,7 +200,7 @@ const NotificationPage = () => {
                       <div className="flex-1 min-w-0">
                         <h3
                           className={`text-sm font-medium ${
-                            !notification.isRead
+                            !notification.read
                               ? "text-gray-900"
                               : "text-gray-700"
                           }`}
@@ -215,11 +221,12 @@ const NotificationPage = () => {
                         </p>
                       </div>
                     </div>
-                    {!notification.isRead && (
+                    {!notification.read && (
                       <button
                         onClick={() => markAsRead(notification.id)}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
+                        className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 border border-gray-200 rounded-md hover:bg-gray-200 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 ml-2"
                       >
+                        <Check className="w-3 h-3 mr-1" />
                         Mark as read
                       </button>
                     )}

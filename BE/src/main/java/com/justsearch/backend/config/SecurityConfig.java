@@ -16,7 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import com.justsearch.backend.security.CustomUserDetailsService;
 
 import jakarta.servlet.Filter;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 
 

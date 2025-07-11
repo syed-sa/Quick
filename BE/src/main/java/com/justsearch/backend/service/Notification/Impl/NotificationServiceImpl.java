@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.justsearch.backend.dto.NotificationDto;
 import com.justsearch.backend.model.Notification;   
@@ -21,10 +23,18 @@ public class NotificationServiceImpl implements NotificationService {
     }
     public List<NotificationDto> getNotificationsForUser(Long userId) {
         // Fetch notifications from the repository and convert them to DTOs
-        List<Notification> notifications = _notificationRepository.findAllByUserId(userId);
+        List<Notification> notifications = _notificationRepository.findAllByUserId(userId); // Filter out read notifications
         return notifications.stream()
                 .map(notification -> _notificationMapper.map(notification, NotificationDto.class))
                 .collect(Collectors.toList());
                 
+    }
+    @PostMapping("/read/{notificationId}")
+    public void markNotificationAsRead(@PathVariable Long notificationId) {
+        // Find the notification by ID and update its status
+        Notification notification = _notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new IllegalArgumentException("Notification not found"));
+        notification.setRead(true);
+        _notificationRepository.save(notification);
     }
 }

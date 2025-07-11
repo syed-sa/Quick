@@ -30,35 +30,9 @@ const UnifiedBookingManagement = () => {
   const [processingId, setProcessingId] = useState(null);
   const [activeTab, setActiveTab] = useState('received'); // 'received' or 'made'
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-        const res = await api.get(`bookservice/GetBookingRequests/${userId}`);
-        const myBookingsRes = await api.get(`bookservice/GetMyBookings/${userId}`);
 
-        if (res.status === 200) {
-          const receivedBookings = res.data;
-          const myBookings = myBookingsRes.data;
-          
-          // Separate bookings by type
-          const categorizedBookings = {
-            received: receivedBookings,
-            made: myBookings
-          };
-          
-          setTimeout(() => {
-            setBookings(categorizedBookings);
-            setFilteredBookings(categorizedBookings[activeTab]);
-            setLoading(false);
-          }, 1000);
-        }
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        setLoading(false);
-      }
-    };
-    
+
+  useEffect(() => {  
     fetchData();
   }, []);
 
@@ -100,13 +74,16 @@ const UnifiedBookingManagement = () => {
     try {
       setProcessingId(bookingId);
 
-      await api.post(`/bookservice/UpdateBookingStatus/${bookingId}`, {
-        bookingStatus: newStatus, // e.g. 'cancelled', 'approved'
-      });
+     await api.post(`/bookservice/UpdateBookingStatus/${bookingId}`, newStatus, {
+  headers: {
+    'Content-Type': 'text/plain',
+  }})
     } catch (error) {
       console.error("Failed to update booking status:", error);
     } finally {
       setProcessingId(null);
+      fetchData(); // Refresh bookings after status update
+      
     }
   };
 
@@ -162,6 +139,34 @@ const UnifiedBookingManagement = () => {
       </div>
     );
   }
+
+  async function fetchData() {
+    try {
+      const userId = localStorage.getItem('userId');
+      const res = await api.get(`bookservice/GetBookingRequests/${userId}`);
+      const myBookingsRes = await api.get(`bookservice/GetMyBookings/${userId}`);
+
+        if (res.status === 200) {
+          const receivedBookings = res.data;
+          const myBookings = myBookingsRes.data;
+          
+          // Separate bookings by type
+          const categorizedBookings = {
+            received: receivedBookings,
+            made: myBookings
+          };
+          
+          setTimeout(() => {
+            setBookings(categorizedBookings);
+            setFilteredBookings(categorizedBookings[activeTab]);
+            setLoading(false);
+          }, 1000);
+        }
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        setLoading(false);
+      }
+    };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

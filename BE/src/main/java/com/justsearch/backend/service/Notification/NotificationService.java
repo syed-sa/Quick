@@ -5,6 +5,7 @@ import com.justsearch.backend.dto.NotificationDto;
 public interface NotificationService {
 
     public List<NotificationDto> getNotificationsForUser(Long userId);
+    public void markNotificationAsRead(Long notificationId);
 
     }
 
