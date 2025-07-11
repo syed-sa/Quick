@@ -17,12 +17,8 @@ public class BookingDetails {
     private Long serviceProviderId;
     private String serviceName;
     private LocalDateTime createdAt;
-    private LocalDate bookingDate;
-    private String timeSlot;
     private String bookingStatus;
     private String description;
-    private String phone;
-    private String email;
     private boolean isActive = true;
 
     public Long getId() {
@@ -69,22 +65,6 @@ public class BookingDetails {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(LocalDate bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
-    public String getTimeSlot() {
-        return timeSlot;
-    }
-
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
-    }
-
     public String getBookingStatus() {
         return bookingStatus;
     }
@@ -101,21 +81,6 @@ public class BookingDetails {
         this.description = description;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
     public boolean isActive() {
         return isActive;
     }

@@ -51,13 +51,9 @@ public class BookServiceImpl implements BookService {
         bookingDetails.setServiceProviderId(serviceProviderId);
         bookingDetails.setServiceId(bookserviceDto.getServiceId());
         bookingDetails.setServiceName(bookserviceDto.getServiceName());
-        bookingDetails.setBookingDate(bookserviceDto.getBookingDate());
-        bookingDetails.setTimeSlot(bookserviceDto.getTimeSlot());
         bookingDetails.setBookingStatus(AppConstants.BOOKING_STATUS_PENDING);
         bookingDetails.setDescription(bookserviceDto.getDescription());
         bookingDetails.setCreatedAt(LocalDateTime.now());
-        bookingDetails.setPhone(user.getPhone());
-        bookingDetails.setEmail(user.getEmail());
         _bookingDetailsRepository.save(bookingDetails);
         createNotification(bookingDetails);
         System.out.println("Booking request created successfully for service: " + bookingDetails.getServiceName()

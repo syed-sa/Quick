@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import api from '../auth/axios';
 import { 
   Calendar, 
   Clock, 
@@ -17,23 +16,84 @@ import {
   XCircle,
   Store,
   UserCheck,
-  Building
+  Building,
+  MapPin
 } from 'lucide-react';
 
 const UnifiedBookingManagement = () => {
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState({
+    received: [
+      {
+        id: 1,
+        serviceName: "Home Cleaning Service",
+        bookingDate: "2024-12-15",
+        phone: "+91 9876543210",
+        email: "customer@example.com",
+        location: "Pallavaram, Chennai",
+        description: "Need deep cleaning for 2BHK apartment",
+        bookingStatus: "pending",
+        createdAt: "2024-12-10T10:30:00Z"
+      },
+      {
+        id: 2,
+        serviceName: "AC Repair",
+        bookingDate: "2024-12-16",
+        phone: "+91 9876543211",
+        email: "user@example.com",
+        location: "Chromepet, Chennai",
+        description: "AC not cooling properly",
+        bookingStatus: "accepted",
+        createdAt: "2024-12-11T14:20:00Z"
+      },
+      {
+        id: 3,
+        serviceName: "Plumbing Service",
+        bookingDate: "2024-12-17",
+        phone: "+91 9876543212",
+        email: "client@example.com",
+        location: "Tambaram, Chennai",
+        description: "Kitchen sink leakage",
+        bookingStatus: "rejected",
+        createdAt: "2024-12-12T09:15:00Z"
+      }
+    ],
+    made: [
+      {
+        id: 4,
+        serviceName: "Electrical Repair",
+        bookingDate: "2024-12-18",
+        phone: "+91 9876543213",
+        email: "provider@example.com",
+        location: "Adyar, Chennai",
+        description: "Power socket replacement",
+        bookingStatus: "pending",
+        createdAt: "2024-12-13T16:45:00Z"
+      },
+      {
+        id: 5,
+        serviceName: "Painting Service",
+        bookingDate: "2024-12-19",
+        phone: "+91 9876543214",
+        email: "painter@example.com",
+        location: "Velachery, Chennai",
+        description: "Living room wall painting",
+        bookingStatus: "accepted",
+        createdAt: "2024-12-14T11:30:00Z"
+      }
+    ]
+  });
+  
   const [filteredBookings, setFilteredBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [processingId, setProcessingId] = useState(null);
-  const [activeTab, setActiveTab] = useState('received'); // 'received' or 'made'
+  const [activeTab, setActiveTab] = useState('received');
 
-
-
-  useEffect(() => {  
-    fetchData();
+  useEffect(() => {
+    // Simulate initial load
+    setFilteredBookings(bookings[activeTab] || []);
   }, []);
 
   // Filter bookings when tab changes
@@ -55,8 +115,6 @@ const UnifiedBookingManagement = () => {
       filtered = filtered.filter(booking => {
         const searchFields = [
           booking.serviceName,
-          booking.phone,
-          booking.email,
           booking.description
         ];
         
@@ -69,21 +127,27 @@ const UnifiedBookingManagement = () => {
     setFilteredBookings(filtered);
   }, [bookings, statusFilter, searchTerm, activeTab]);
 
-
   const handleStatus = async (bookingId, newStatus) => {
     try {
       setProcessingId(bookingId);
-
-     await api.post(`/bookservice/UpdateBookingStatus/${bookingId}`, newStatus, {
-  headers: {
-    'Content-Type': 'text/plain',
-  }})
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update local state
+      setBookings(prev => ({
+        ...prev,
+        [activeTab]: prev[activeTab].map(booking => 
+          booking.id === bookingId 
+            ? { ...booking, bookingStatus: newStatus }
+            : booking
+        )
+      }));
+      
     } catch (error) {
       console.error("Failed to update booking status:", error);
     } finally {
       setProcessingId(null);
-      fetchData(); // Refresh bookings after status update
-      
     }
   };
 
@@ -129,6 +193,126 @@ const UnifiedBookingManagement = () => {
     return bookings[tab]?.length || 0;
   };
 
+  const renderContactDetails = (booking) => {
+    if (booking.bookingStatus === 'accepted') {
+      return (
+        <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+          <div className="flex items-center mb-2">
+            <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+            <p className="text-green-800 font-medium">
+              Your request has been accepted! Here are the contact details:
+            </p>
+          </div>
+          <div className="space-y-2 ml-7">
+            <div className="flex items-center">
+              <Phone className="h-4 w-4 mr-2 text-green-600" />
+              <a href={`tel:${booking.phone}`} className="text-green-700 hover:text-green-800 font-medium">
+                {booking.phone}
+              </a>
+            </div>
+            <div className="flex items-center">
+              <Mail className="h-4 w-4 mr-2 text-green-600" />
+              <a href={`mailto:${booking.email}`} className="text-green-700 hover:text-green-800 font-medium">
+                {booking.email}
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (booking.bookingStatus === 'rejected') {
+      return (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+          <div className="flex items-center">
+            <XCircle className="h-5 w-5 text-red-400 mr-2" />
+            <p className="text-red-800 font-medium">
+              Your booking request has been rejected.
+            </p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderBasicInfo = (booking) => {
+    if (booking.bookingStatus === 'accepted') {
+      return (
+        <div className="space-y-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center text-gray-600">
+              <Calendar className="h-4 w-4 mr-2 text-red-500" />
+              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <Clock className="h-4 w-4 mr-2 text-red-500" />
+              <span className="text-sm">Booked on {formatBookedAt(booking.createdAt)}</span>
+            </div>
+          </div>
+          {/* Show contact details for accepted bookings */}
+          {activeTab === 'received' && (
+            <div className="bg-green-50 border-l-4 border-green-400 p-4">
+              <div className="flex items-center mb-2">
+                <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+                <p className="text-green-800 font-medium">
+                  Booking accepted! Customer contact details:
+                </p>
+              </div>
+              <div className="space-y-2 ml-7">
+                <div className="flex items-center">
+                  <Phone className="h-4 w-4 mr-2 text-green-600" />
+                  <a href={`tel:${booking.phone}`} className="text-green-700 hover:text-green-800 font-medium">
+                    {booking.phone}
+                  </a>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="h-4 w-4 mr-2 text-green-600" />
+                  <a href={`mailto:${booking.email}`} className="text-green-700 hover:text-green-800 font-medium">
+                    {booking.email}
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    } else if (booking.bookingStatus === 'rejected') {
+      return (
+        <div className="grid grid-cols-1 gap-4 mb-4">
+          <div className="flex items-center text-gray-600">
+            <Calendar className="h-4 w-4 mr-2 text-red-500" />
+            <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+          </div>
+        </div>
+      );
+    } else {
+      // For pending status
+      if (activeTab === 'received') {
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="flex items-center text-gray-600">
+              <Calendar className="h-4 w-4 mr-2 text-red-500" />
+              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+            </div>
+            <div className="flex items-center text-gray-600">
+              <MapPin className="h-4 w-4 mr-2 text-red-500" />
+              <span className="text-sm">{booking.location}</span>
+            </div>
+          </div>
+        );
+      } else {
+        // For made bookings, don't show contact details when pending
+        return (
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <div className="flex items-center text-gray-600">
+              <Calendar className="h-4 w-4 mr-2 text-red-500" />
+              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+            </div>
+          </div>
+        );
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -139,34 +323,6 @@ const UnifiedBookingManagement = () => {
       </div>
     );
   }
-
-  async function fetchData() {
-    try {
-      const userId = localStorage.getItem('userId');
-      const res = await api.get(`bookservice/GetBookingRequests/${userId}`);
-      const myBookingsRes = await api.get(`bookservice/GetMyBookings/${userId}`);
-
-        if (res.status === 200) {
-          const receivedBookings = res.data;
-          const myBookings = myBookingsRes.data;
-          
-          // Separate bookings by type
-          const categorizedBookings = {
-            received: receivedBookings,
-            made: myBookings
-          };
-          
-          setTimeout(() => {
-            setBookings(categorizedBookings);
-            setFilteredBookings(categorizedBookings[activeTab]);
-            setLoading(false);
-          }, 1000);
-        }
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        setLoading(false);
-      }
-    };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -224,7 +380,7 @@ const UnifiedBookingManagement = () => {
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search by service name, phone, email, or description..."
+                  placeholder="Search by service name or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
@@ -311,10 +467,7 @@ const UnifiedBookingManagement = () => {
                                 {booking.serviceName}
                               </h3>
                               <p className="text-sm text-gray-600">
-                                {activeTab === 'received' 
-                                  ? `Booking ID: ${booking.id}`
-                                  : `Booking ID: ${booking.id}`
-                                }
+                                Booking ID: {booking.id}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
@@ -337,24 +490,11 @@ const UnifiedBookingManagement = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                        <div className="flex items-center text-gray-600">
-                          <Calendar className="h-4 w-4 mr-2 text-red-500" />
-                          <span className="text-sm">{formatDate(booking.bookingDate)}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Clock className="h-4 w-4 mr-2 text-red-500" />
-                          <span className="text-sm">{booking.timeSlot}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Phone className="h-4 w-4 mr-2 text-red-500" />
-                          <span className="text-sm">{booking.phone}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Mail className="h-4 w-4 mr-2 text-red-500" />
-                          <span className="text-sm">{booking.email}</span>
-                        </div>
-                      </div>
+                      {/* Contact Details Section - Only for "made" bookings */}
+                      {activeTab === 'made' && renderContactDetails(booking)}
+
+                      {/* Basic Info */}
+                      {renderBasicInfo(booking)}
 
                       {booking.description && (
                         <div className="bg-gray-50 p-3 rounded-lg mb-4">
@@ -415,7 +555,7 @@ const UnifiedBookingManagement = () => {
                           {/* Actions for made bookings (customer) */}
                           {activeTab === 'made' && booking.bookingStatus === 'pending' && (
                             <button
-                              onClick={() => handleStatus(booking.id)}
+                              onClick={() => handleStatus(booking.id, 'cancelled')}
                               disabled={processingId === booking.id}
                               className="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                             >
@@ -475,24 +615,53 @@ const UnifiedBookingManagement = () => {
                   <p className="text-gray-900">{selectedBooking.serviceName}</p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <p className="text-gray-900">{formatDate(selectedBooking.bookingDate)}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
-                    <p className="text-gray-900">{selectedBooking.timeSlot}</p>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <p className="text-gray-900">{formatDate(selectedBooking.bookingDate)}</p>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Info</label>
-                  <div className="space-y-1">
-                    <p className="text-gray-900">📞 {selectedBooking.phone}</p>
-                    <p className="text-gray-900">📧 {selectedBooking.email}</p>
+                {/* Contact Info - Show based on status and tab */}
+                {((activeTab === 'received' && selectedBooking.bookingStatus === 'accepted') || 
+                  (activeTab === 'made' && selectedBooking.bookingStatus === 'accepted')) && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact Info</label>
+                    {activeTab === 'made' && selectedBooking.bookingStatus === 'accepted' && (
+                      <div className="bg-green-50 p-3 rounded-lg mb-2">
+                        <p className="text-green-800 text-sm font-medium mb-2">
+                          Your request has been accepted! Contact details:
+                        </p>
+                      </div>
+                    )}
+                    {activeTab === 'received' && selectedBooking.bookingStatus === 'accepted' && (
+                      <div className="bg-green-50 p-3 rounded-lg mb-2">
+                        <p className="text-green-800 text-sm font-medium mb-2">
+                          Booking accepted! Customer contact details:
+                        </p>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <p className="text-gray-900 flex items-center">
+                        <Phone className="h-4 w-4 mr-2" />
+                        {selectedBooking.phone}
+                      </p>
+                      <p className="text-gray-900 flex items-center">
+                        <Mail className="h-4 w-4 mr-2" />
+                        {selectedBooking.email}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Location - Show for received bookings when pending */}
+                {activeTab === 'received' && selectedBooking.bookingStatus === 'pending' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Customer Location</label>
+                    <p className="text-gray-900 flex items-center">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {selectedBooking.location}
+                    </p>
+                  </div>
+                )}
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -513,10 +682,23 @@ const UnifiedBookingManagement = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Booked At</label>
                   <p className="text-gray-900">{formatBookedAt(selectedBooking.createdAt)}</p>
                 </div>
+
+                {/* Status-specific messages in modal */}
+                {activeTab === 'made' && selectedBooking.bookingStatus === 'rejected' && (
+                  <div className="bg-red-50 border-l-4 border-red-400 p-4">
+                    <div className="flex items-center">
+                      <XCircle className="h-5 w-5 text-red-400 mr-2" />
+                      <p className="text-red-800 font-medium">
+                        Your booking request has been rejected.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
+        
       </div>
     </div>
   );

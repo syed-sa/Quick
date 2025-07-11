@@ -305,35 +305,7 @@ const ServiceDetailPage = () => {
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-8">
               {/* Contact Information */}
-              <div className="bg-white rounded-3xl shadow-xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
-                  {service.email && (
-                    <div className="flex items-center p-4 bg-blue-50 rounded-xl">
-                      <Mail className="w-5 h-5 mr-3 text-blue-500" />
-                      <a
-                        href={`mailto:${service.email}`}
-                        className="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
-                      >
-                        {service.email}
-                      </a>
-                    </div>
-                  )}
-                  {service.phone && (
-                    <div className="flex items-center p-4 bg-green-50 rounded-xl">
-                      <Phone className="w-5 h-5 mr-3 text-green-500" />
-                      <a
-                        href={`tel:${service.phone}`}
-                        className="text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
-                      >
-                        {service.phone}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
+             
 
               {/* Book Service Button */}
               <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl shadow-xl p-8">
@@ -350,7 +322,7 @@ const ServiceDetailPage = () => {
                     className="w-full bg-white text-gray-900 font-bold py-4 px-8 rounded-2xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2"
                   >
                     <Calendar className="w-5 h-5" />
-                    <span>Book Service Now</span>
+                    <span>Request Service Now</span>
                   </button>
                   <p className="text-blue-200 text-sm mt-4">
                     Free consultation • Quick response • Professional service

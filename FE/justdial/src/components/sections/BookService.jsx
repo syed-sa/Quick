@@ -43,25 +43,7 @@ const BookingCard = ({ customerId, serviceId, serviceName, onClose }) => {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
         <button onClick={onClose} className="absolute top-3 right-4 text-gray-500 hover:text-red-600 text-xl">&times;</button>
-        <h2 className="text-xl font-bold mb-4">Book Service</h2>
-        <label className="block mb-1">Date</label>
-        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full border p-2 rounded-lg mb-4"/>
-        <div className="flex gap-4 mb-4">
-          <div className="flex-1">
-            <label className="block mb-1">From</label>
-            <select value={fromTime} onChange={e => setFromTime(e.target.value)} className="w-full border p-2 rounded-lg">
-              <option value="">--</option>
-              {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="block mb-1">To</label>
-            <select value={toTime} onChange={e => setToTime(e.target.value)} className="w-full border p-2 rounded-lg">
-              <option value="">--</option>
-              {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
-        </div>
+        <h2 className="text-xl font-bold mb-4">Request Service</h2>
         <div className="flex gap-4 mb-9">
         <div className="flex-1">
             <label className="block mb-1">Description</label>
