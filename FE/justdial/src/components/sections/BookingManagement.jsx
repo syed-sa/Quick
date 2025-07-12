@@ -72,19 +72,22 @@ const UnifiedBookingManagement = () => {
     setFilteredBookings(filtered);
   }, [bookings, statusFilter, searchTerm, activeTab]);
 
-  const handleStatus = async (bookingId, newStatus) => {
+  const handleStatus = async (bookingId, status) => {
     try {
-      setProcessingId(bookingId);
-      
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+    
+        const response =   await api.post(`bookservice/UpdateBookingStatus/${bookingId}?status=${status}`);
+
+      if(response.status == 200)
+      {
+console.log("W");
+      }
       // Update local state
       setBookings(prev => ({
         ...prev,
         [activeTab]: prev[activeTab].map(booking => 
           booking.id === bookingId 
-            ? { ...booking, bookingStatus: newStatus }
+            ? { ...booking, bookingStatus: status }
             : booking
         )
       }));
@@ -92,8 +95,7 @@ const UnifiedBookingManagement = () => {
     } catch (error) {
       console.error("Failed to update booking status:", error);
     } finally {
-      setProcessingId(null);
-    }
+      setProcessingId(null);    }
   };
 
   const getStatusColor = (status) => {
@@ -198,10 +200,7 @@ const UnifiedBookingManagement = () => {
       return (
         <div className="space-y-4 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center text-gray-600">
-              <Calendar className="h-4 w-4 mr-2 text-red-500" />
-              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
-            </div>
+            
             <div className="flex items-center text-gray-600">
               <Clock className="h-4 w-4 mr-2 text-red-500" />
               <span className="text-sm">Booked on {formatBookedAt(booking.createdAt)}</span>
@@ -239,7 +238,7 @@ const UnifiedBookingManagement = () => {
         <div className="grid grid-cols-1 gap-4 mb-4">
           <div className="flex items-center text-gray-600">
             <Calendar className="h-4 w-4 mr-2 text-red-500" />
-            <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+            <span className="text-sm">{formatDate(booking.createdAt)}</span>
           </div>
         </div>
       );
@@ -250,7 +249,7 @@ const UnifiedBookingManagement = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="flex items-center text-gray-600">
               <Calendar className="h-4 w-4 mr-2 text-red-500" />
-              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+              <span className="text-sm">{formatDate(booking.createdAt)}</span>
             </div>
             <div className="flex items-center text-gray-600">
               <MapPin className="h-4 w-4 mr-2 text-red-500" />
@@ -264,7 +263,7 @@ const UnifiedBookingManagement = () => {
           <div className="grid grid-cols-1 gap-4 mb-4">
             <div className="flex items-center text-gray-600">
               <Calendar className="h-4 w-4 mr-2 text-red-500" />
-              <span className="text-sm">{formatDate(booking.bookingDate)}</span>
+              <span className="text-sm">{formatDate(booking.createdAt)}</span>
             </div>
           </div>
         );
@@ -578,7 +577,7 @@ const UnifiedBookingManagement = () => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                  <p className="text-gray-900">{formatDate(selectedBooking.bookingDate)}</p>
+                  <p className="text-gray-900">{formatDate(selectedBooking.createdAt)}</p>
                 </div>
                 
                 {/* Contact Info - Show based on status and tab */}

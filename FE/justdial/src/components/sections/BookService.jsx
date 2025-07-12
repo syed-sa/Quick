@@ -17,14 +17,8 @@ const [state, setState] = useState('');
     setLoading(true);
     try {
       const bookingDetails = { customerId, serviceId, serviceName, location : city + ',' + state, description };
-      const token = localStorage.getItem('token');
       console.log("Booking payload", JSON.stringify(bookingDetails));
-     const res = await api.post('bookservice/RequestBooking', bookingDetails, {
-       headers: {
-         Authorization: `Bearer ${token}`,
-         'Content-Type': 'application/json'
-       },
-});
+     const res = await api.post('bookservice/RequestBooking', bookingDetails);
       if (res.status === 200 || res.status === 201) {
         toast.success('Booking successful!');
         onClose();
