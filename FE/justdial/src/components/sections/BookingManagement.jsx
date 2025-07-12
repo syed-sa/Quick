@@ -19,70 +19,15 @@ import {
   Building,
   MapPin
 } from 'lucide-react';
+import api from '../auth/axios';
 
 const UnifiedBookingManagement = () => {
-  const [bookings, setBookings] = useState({
-    received: [
-      {
-        id: 1,
-        serviceName: "Home Cleaning Service",
-        bookingDate: "2024-12-15",
-        phone: "+91 9876543210",
-        email: "customer@example.com",
-        location: "Pallavaram, Chennai",
-        description: "Need deep cleaning for 2BHK apartment",
-        bookingStatus: "pending",
-        createdAt: "2024-12-10T10:30:00Z"
-      },
-      {
-        id: 2,
-        serviceName: "AC Repair",
-        bookingDate: "2024-12-16",
-        phone: "+91 9876543211",
-        email: "user@example.com",
-        location: "Chromepet, Chennai",
-        description: "AC not cooling properly",
-        bookingStatus: "accepted",
-        createdAt: "2024-12-11T14:20:00Z"
-      },
-      {
-        id: 3,
-        serviceName: "Plumbing Service",
-        bookingDate: "2024-12-17",
-        phone: "+91 9876543212",
-        email: "client@example.com",
-        location: "Tambaram, Chennai",
-        description: "Kitchen sink leakage",
-        bookingStatus: "rejected",
-        createdAt: "2024-12-12T09:15:00Z"
-      }
-    ],
-    made: [
-      {
-        id: 4,
-        serviceName: "Electrical Repair",
-        bookingDate: "2024-12-18",
-        phone: "+91 9876543213",
-        email: "provider@example.com",
-        location: "Adyar, Chennai",
-        description: "Power socket replacement",
-        bookingStatus: "pending",
-        createdAt: "2024-12-13T16:45:00Z"
-      },
-      {
-        id: 5,
-        serviceName: "Painting Service",
-        bookingDate: "2024-12-19",
-        phone: "+91 9876543214",
-        email: "painter@example.com",
-        location: "Velachery, Chennai",
-        description: "Living room wall painting",
-        bookingStatus: "accepted",
-        createdAt: "2024-12-14T11:30:00Z"
-      }
-    ]
-  });
-  
+  const [bookings, setBookings] = useState({received: [], made: []});
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    getBookings(userId);
+  }, []);
+
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -192,6 +137,20 @@ const UnifiedBookingManagement = () => {
   const getTabCount = (tab) => {
     return bookings[tab]?.length || 0;
   };
+
+  async function getBookings(userId) {
+    try {
+      // Fetch received bookings from API or state
+      const receivedBookings = await api.get(`bookservice/GetBookingRequests/${userId}`);
+      const madeBookings = await api.get(`bookservice/GetMyBookings/${userId}`);
+      setBookings({
+        received: receivedBookings.data || [],
+        made: madeBookings.data || []
+      });
+    } catch (error) {
+      console.error("Failed to fetch received bookings:", error);
+    }
+  }
 
   const renderContactDetails = (booking) => {
     if (booking.bookingStatus === 'accepted') {
@@ -312,6 +271,8 @@ const UnifiedBookingManagement = () => {
       }
     }
   };
+
+  
 
   if (loading) {
     return (

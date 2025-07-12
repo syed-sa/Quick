@@ -24,16 +24,14 @@ public class BookServiceImpl implements BookService {
 
     private BookingDetailsRepository _bookingDetailsRepository;
     private ServicesRepository _servicesRepository;
-    private ModelMapper _bookingDetailsMapper;
-    private UserRepository _userRepository;
+   private UserRepository _userRepository;
     private NotificationRepository _notificationRepository;
 
     public BookServiceImpl(BookingDetailsRepository bookingDetailsRepository, ServicesRepository servicesRepository,
-            ModelMapper bookingDetailsMapper, UserRepository userRepository,
+             UserRepository userRepository,
             NotificationRepository notificationRepository) {
         _bookingDetailsRepository = bookingDetailsRepository;
         _servicesRepository = servicesRepository;
-        _bookingDetailsMapper = bookingDetailsMapper;
         _userRepository = userRepository;
         _notificationRepository = notificationRepository;
     }
@@ -54,6 +52,7 @@ public class BookServiceImpl implements BookService {
         bookingDetails.setBookingStatus(AppConstants.BOOKING_STATUS_PENDING);
         bookingDetails.setDescription(bookserviceDto.getDescription());
         bookingDetails.setCreatedAt(LocalDateTime.now());
+        bookingDetails.setLocation(bookserviceDto.location);
         _bookingDetailsRepository.save(bookingDetails);
         createNotification(bookingDetails);
         System.out.println("Booking request created successfully for service: " + bookingDetails.getServiceName()
@@ -61,20 +60,14 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    public List<BookingDetailsDto> getBookingRequests(long userId) {
-        List<BookingDetails> bookingDetails = _bookingDetailsRepository.findAllByServiceProviderId(userId);
-        List<BookingDetailsDto> bookService = bookingDetails.stream()
-                .map(source -> _bookingDetailsMapper.map(source, BookingDetailsDto.class))
-                .collect(Collectors.toList());
+    public List<BookingDetailsDto> getBookingRequests(long serviceProviderId) {
+        var bookService = _bookingDetailsRepository.fetchBookingsWithCustomerInfo(serviceProviderId);
         return bookService;
     }
 
     public List<BookingDetailsDto> getMyBookings(long userId) {
-        List<BookingDetails> bookingDetails = (_bookingDetailsRepository.findAllByCustomerId(userId));
-        bookingDetails.removeIf(booking -> !booking.isActive());
-        List<BookingDetailsDto> bookService = bookingDetails.stream()
-                .map(source -> _bookingDetailsMapper.map(source, BookingDetailsDto.class))
-                .collect(Collectors.toList());
+       
+        List<BookingDetailsDto> bookService = _bookingDetailsRepository.fetchBookingsWithServiceProviderInfo(userId);
         return bookService;
     }
 

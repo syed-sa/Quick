@@ -1,6 +1,4 @@
 package com.justsearch.backend.dto;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class BookingDetailsDto {
@@ -11,17 +9,32 @@ public class BookingDetailsDto {
     public Long serviceProviderId;
     public String serviceName;
     public LocalDateTime createdAt;
-    public LocalDate bookingDate;
-    public String timeSlot;
     public String bookingStatus;
     public String phone;
     public String email;
     public String description;
+    public String location;
 
     public BookingDetailsDto() {
-        // Default constructor needed for Jackson
-    }
+    // required by ModelMapper or frameworks that use reflection
+}
 
+
+    public BookingDetailsDto(Long id, Long serviceId, Long customerId, Long serviceProviderId,
+                         String serviceName, LocalDateTime createdAt, String bookingStatus,
+                         String phone, String email, String description,String location) {
+    this.id = id;
+    this.serviceId = serviceId;
+    this.customerId = customerId;
+    this.serviceProviderId = serviceProviderId;
+    this.serviceName = serviceName;
+    this.createdAt = createdAt;
+    this.bookingStatus = bookingStatus;
+    this.phone = phone;
+    this.email = email;
+    this.description = description;
+    this.location = location;
+}
     public Long getCustomerId() {
         return customerId;
     }
@@ -38,13 +51,6 @@ public class BookingDetailsDto {
         this.serviceId = serviceId;
     }
 
-    public String getTimeSlot() {
-        return timeSlot;
-    }
-
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
-    }
 
     public String getBookingStatus() {
         return bookingStatus;
@@ -54,13 +60,6 @@ public class BookingDetailsDto {
         this.bookingStatus = bookingStatus;
     }
 
-    public LocalDate getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(LocalDate bookingDate) {
-        this.bookingDate = bookingDate;
-    }
 
     public String getServiceName() {
         return serviceName;

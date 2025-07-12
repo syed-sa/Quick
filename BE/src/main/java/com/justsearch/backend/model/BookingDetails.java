@@ -1,6 +1,4 @@
 package com.justsearch.backend.model;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +18,7 @@ public class BookingDetails {
     private String bookingStatus;
     private String description;
     private boolean isActive = true;
+    private String location;
 
     public Long getId() {
         return id;
@@ -86,6 +85,15 @@ public class BookingDetails {
     }
     public void setActive(boolean active) {
         isActive = active;
+    }
+    public String getLocation()
+    {
+        return location;
+    }
+
+    public void setLocation (String location)
+    {
+        this.location = location;
     }
 
 }
