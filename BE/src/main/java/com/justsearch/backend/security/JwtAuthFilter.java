@@ -12,8 +12,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.justsearch.backend.security.CustomUserDetailsService;
-import com.justsearch.backend.model.User;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
