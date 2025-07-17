@@ -9,54 +9,16 @@ import {
   Mail,
   Smartphone,
 } from "lucide-react";
+ import SockJS from 'sockjs-client';
+ import { Stomp } from '@stomp/stompjs';
+ import { toast } from 'react-toastify';
 import api from "../components/auth/axios";
 import { formatDistanceToNow } from "date-fns";
 
 import { useEffect } from "react";
 const NotificationPage = () => {
   const [activeTab, setActiveTab] = useState("all");
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "requested",
-      title: "New Booking Request",
-      message:
-        "John Doe has requested a booking for AC Repair service on Dec 15, 2024",
-      timestamp: "2 hours ago",
-      read: false,
-      priority: "high",
-    },
-    {
-      id: 2,
-      type: "accepted",
-      title: "Booking Confirmed",
-      message:
-        "Your booking for Plumbing service has been confirmed by ABC Services",
-      timestamp: "5 hours ago",
-      read: true,
-      priority: "medium",
-    },
-    {
-      id: 3,
-      type: "rejected",
-      title: "Booking Declined",
-      message:
-        "Your booking request for Electrical work has been declined. Please try another service provider.",
-      timestamp: "1 day ago",
-      read: false,
-      priority: "medium",
-    },
-    {
-      id: 4,
-      type: "reminder",
-      title: "Upcoming Service",
-      message:
-        "Reminder: Your AC Repair service is scheduled for tomorrow at 2:00 PM",
-      timestamp: "2 days ago",
-      read: true,
-      priority: "low",
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
@@ -75,6 +37,21 @@ const NotificationPage = () => {
 
     getNotification();
   }, []);
+
+   useEffect(() => {
+     const socket = new SockJS('/ws-notify');
+    const stomp = Stomp.over(() => socket);
+    stomp.connect({}, () => {
+      stomp.subscribe('/user/queue/toast', (message) => {
+        const t = JSON.parse(message.body);
+        // 1. toast
+         toast.info(t.body, { autoClose: 4000 });
+         // 2. add to list
+         setNotifications(prev => [t, ...prev]);
+      });
+    });
+     return () => stomp.disconnect();
+   }, []);
 
   const getNotificationIcon = (type) => {
     switch (type) {

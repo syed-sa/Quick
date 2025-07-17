@@ -23,10 +23,11 @@ public class BookServiceImpl implements BookService {
 
     public BookServiceImpl(BookingDetailsRepository bookingDetailsRepository, ServicesRepository servicesRepository,
             UserRepository userRepository,
-            NotificationRepository notificationRepository) {
+            NotificationService notificationService) {
         _bookingDetailsRepository = bookingDetailsRepository;
         _servicesRepository = servicesRepository;
         _userRepository = userRepository;
+        _notificationService = notificationService;
     }
 
     public void createBookingRequest(BookingDetailsDto bookserviceDto) {

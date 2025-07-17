@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.NotificationDto;
+import com.justsearch.backend.dto.ToastMessage;
 import com.justsearch.backend.model.BookingDetails;
 import com.justsearch.backend.model.Notification;
 import com.justsearch.backend.repository.NotificationRepository;
@@ -18,10 +20,13 @@ import com.justsearch.backend.service.Notification.NotificationService;
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository _notificationRepository;
     private final ModelMapper _notificationMapper;
+     private final SimpMessagingTemplate messagingTemplate;   // <-- new
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper notificationMapper) {
+
+    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper notificationMapper,SimpMessagingTemplate simpMessagingTemplate) {
         _notificationRepository = notificationRepository;
         _notificationMapper = notificationMapper;
+        messagingTemplate = simpMessagingTemplate;
     }
 
     public List<NotificationDto> getNotificationsForUser(Long userId) {
@@ -53,6 +58,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setNotificationType(AppConstants.BOOKING_STATUS_PENDING);
         notification.setBookingId(bookingDetails.getId());
         _notificationRepository.save(notification);
+        pushToast(notification);
     }
 
     public void createBookingRejectedNotification(BookingDetails bookingDetails) {
@@ -66,5 +72,37 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setNotificationType(AppConstants.BOOKING_STATUS_REJECTED);
         notification.setBookingId(bookingDetails.getId());
         _notificationRepository.save(notification);
+        pushToast(notification);
+
     }
+
+     // Add this to your service class
+private void pushToast(Notification n) {
+    try {
+        ToastMessage toastMessage = new ToastMessage(
+                n.getId(),
+                n.getNotificationTitle(),
+                n.getMessage(),
+                n.getTimestamp()
+        );
+        
+        // Log for debugging
+        System.out.println("Sending toast to user: " + n.getUserId());
+        System.out.println("Toast message: " + toastMessage);
+        
+        // Send to specific user
+        messagingTemplate.convertAndSendToUser(
+                n.getUserId().toString(),           // destination user
+                "/queue/toast",                     // browser subscribes to /user/queue/toast
+                toastMessage
+        );
+        
+        // Alternative: Send to all users (for testing)
+        // messagingTemplate.convertAndSend("/user/queue/toast", toastMessage);
+        
+    } catch (Exception e) {
+        System.err.println("Error sending toast notification: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 }

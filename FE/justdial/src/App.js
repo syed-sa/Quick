@@ -15,8 +15,12 @@ import ServiceDetailPage from "./pages/ServiceDetailPage";
 import BusinessProfile from "./pages/BuisnessProfile";
 import BookingManagement  from "./components/sections/BookingManagement"; 
 import NotificationPage  from "./pages/Notification"; 
+import { useNotificationSocket } from "./hooks/useNotificationSocket";
+ 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
+        const userId = localStorage.getItem("userId");
+  useNotificationSocket(userId);
 
   return (
     <div className="flex flex-col min-h-screen">
