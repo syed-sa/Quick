@@ -13,20 +13,26 @@ import com.justsearch.backend.dto.NotificationDto;
 import com.justsearch.backend.dto.ToastMessage;
 import com.justsearch.backend.model.BookingDetails;
 import com.justsearch.backend.model.Notification;
+import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.NotificationRepository;
+import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.service.Notification.NotificationService;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository _notificationRepository;
     private final ModelMapper _notificationMapper;
+        private UserRepository _userRepository;
+
      private final SimpMessagingTemplate messagingTemplate;   // <-- new
 
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper notificationMapper,SimpMessagingTemplate simpMessagingTemplate) {
+    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper notificationMapper,
+    SimpMessagingTemplate simpMessagingTemplate,UserRepository userRepository) {
         _notificationRepository = notificationRepository;
         _notificationMapper = notificationMapper;
         messagingTemplate = simpMessagingTemplate;
+        _userRepository = userRepository;
     }
 
     public List<NotificationDto> getNotificationsForUser(Long userId) {
@@ -89,11 +95,11 @@ private void pushToast(Notification n) {
         // Log for debugging
         System.out.println("Sending toast to user: " + n.getUserId());
         System.out.println("Toast message: " + toastMessage);
-        
+         User user = _userRepository.findById(n.getUserId()).orElse(new User());
         // Send to specific user
         messagingTemplate.convertAndSendToUser(
-                n.getUserId().toString(),           // destination user
-                "/queue/toast",                     // browser subscribes to /user/queue/toast
+               user.getEmail().toString(),           
+                "/queue/toast",    
                 toastMessage
         );
         

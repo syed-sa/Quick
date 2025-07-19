@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { MapPin, User, Bell, Heart, Store, Menu, X } from "lucide-react";
-
+import {toast} from "react-toastify";
 const Header = ({ selectedCity, setSelectedCity }) => {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -73,6 +73,7 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
         <option>Bangalore</option>
         <option>Chennai</option>
       </select>
+      
     </div>
 
     {/* User / Notifications / Favourites */}
