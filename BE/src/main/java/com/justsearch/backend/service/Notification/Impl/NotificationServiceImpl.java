@@ -82,7 +82,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     }
 
-     // Add this to your service class
 private void pushToast(Notification n) {
     try {
         ToastMessage toastMessage = new ToastMessage(
@@ -92,11 +91,9 @@ private void pushToast(Notification n) {
                 n.getTimestamp()
         );
         
-        // Log for debugging
         System.out.println("Sending toast to user: " + n.getUserId());
         System.out.println("Toast message: " + toastMessage);
          User user = _userRepository.findById(n.getUserId()).orElse(new User());
-        // Send to specific user
         messagingTemplate.convertAndSendToUser(
                user.getEmail().toString(),           
                 "/queue/toast",    

@@ -19,7 +19,7 @@ import { useNotificationSocket } from "./hooks/useNotificationSocket";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
-  useNotificationSocket();
+  // useNotificationSocket();
 
   return (
     <div className="flex flex-col min-h-screen">

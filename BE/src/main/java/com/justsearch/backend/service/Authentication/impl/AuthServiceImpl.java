@@ -1,11 +1,18 @@
 package com.justsearch.backend.service.Authentication.impl;
-import java.util.ArrayList;
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,14 +21,12 @@ import com.justsearch.backend.dto.SignInDto;
 import com.justsearch.backend.dto.SignupRequestDto;
 import com.justsearch.backend.dto.TokenResponseDto;
 import com.justsearch.backend.model.RefreshToken;
+import com.justsearch.backend.model.Role;
 import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.RefreshTokenRepository;
 import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.security.JwtUtils;
 import com.justsearch.backend.service.Authentication.AuthService;
-
-
-
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -33,24 +38,40 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtUtils jwtUtils;
+    private RoleServiceImpl _roleService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public AuthServiceImpl(PasswordEncoder passwordEncoder, JwtUtils jwtUtils,
-            RefreshTokenRepository refreshTokenRepository) {
+            RefreshTokenRepository refreshTokenRepository, RoleServiceImpl roleService,
+            AuthenticationManager authenticationManager) {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this._refreshTokenRepository = refreshTokenRepository;
+        _roleService = roleService;
+        this.authenticationManager = authenticationManager;
+
     }
 
     public void userSignUp(SignupRequestDto signUpRequest) {
-
         if (_userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email already taken");
         }
+
         User user = new User();
         user.setEmail(signUpRequest.getEmail());
         user.setName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setPhone(signUpRequest.getPhone());
+        Set<Role> roleSet = new HashSet<>();
+        Role role = _roleService.findByName("USER");
+        roleSet.add(role);
+        if (user.getEmail().split("@")[1].equals("admin.edu")) {
+            Role adminRole = _roleService.findByName("ADMIN");
+            roleSet.add(adminRole);
+        }
+        user.setRoles(roleSet);
+
         _userRepository.save(user);
     }
 
@@ -65,23 +86,22 @@ public class AuthServiceImpl implements AuthService {
                     .body(errorResponse);
         }
         User user = userOptional.get();
+        try {
+            final String token = getAccessToken(user, request.getPassword());
+            RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
+            _refreshTokenRepository.save(refreshToken);
+            TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), token, refreshToken.getToken(),
+                    user.getId());
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.ok(tokenResponse);
+        } catch (Exception ex) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Invalid password");
-            errorResponse.put("error", "INVALID_PASSWORD");
+            errorResponse.put("message", "Invalid credentials");
+            errorResponse.put("error", "BAD_CREDENTIALS");
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(errorResponse); // ← Return JSON object instead of null
+                    .body(errorResponse);
         }
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
-                user.getPassword(), new ArrayList<>());
-        String token = jwtUtils.generateToken(userDetails);
-        RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
-        _refreshTokenRepository.save(refreshToken);
-        TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), token, refreshToken.getToken(),
-                user.getId());
-        return ResponseEntity.ok(tokenResponse);
     }
 
     @Transactional
@@ -91,9 +111,15 @@ public class AuthServiceImpl implements AuthService {
             User user = _userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             _refreshTokenRepository.deleteByToken(refreshToken);
-            UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
-                    user.getPassword(), new ArrayList<>());
-            String newAccessToken = jwtUtils.generateToken(userDetails);
+            UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getRoles().stream()
+                            .map(role -> new SimpleGrantedAuthority(role.getName()))
+                            .toList());
+                             Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+            String newAccessToken = jwtUtils.generateToken(auth);
             RefreshToken newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
             TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), newAccessToken,
                     newRefreshToken.getToken(),
@@ -113,6 +139,14 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
         refreshTokenEntity.setRevoked(true);
         _refreshTokenRepository.save(refreshTokenEntity);
+    }
+
+    private String getAccessToken(User user, String rawPassword) {
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), rawPassword));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtUtils.generateToken(authentication);
+        return token;
     }
 
 }
