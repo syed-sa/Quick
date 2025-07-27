@@ -9,9 +9,6 @@ import {
   Mail,
   Smartphone,
 } from "lucide-react";
- import SockJS from 'sockjs-client';
- import { Stomp } from '@stomp/stompjs';
- import { toast } from 'react-toastify';
 import api from "../components/auth/axios";
 import { formatDistanceToNow } from "date-fns";
 
@@ -37,21 +34,6 @@ const NotificationPage = () => {
 
     getNotification();
   }, []);
-
-   useEffect(() => {
-     const socket = new SockJS('/ws-notify');
-    const stomp = Stomp.over(() => socket);
-    stomp.connect({}, () => {
-      stomp.subscribe('/user/queue/toast', (message) => {
-        const t = JSON.parse(message.body);
-        // 1. toast
-         toast.info(t.body, { autoClose: 4000 });
-         // 2. add to list
-         setNotifications(prev => [t, ...prev]);
-      });
-    });
-     return () => stomp.disconnect();
-   }, []);
 
   const getNotificationIcon = (type) => {
     switch (type) {

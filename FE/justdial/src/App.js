@@ -15,11 +15,12 @@ import ServiceDetailPage from "./pages/ServiceDetailPage";
 import BusinessProfile from "./pages/BuisnessProfile";
 import BookingManagement from "./components/sections/BookingManagement";
 import NotificationPage from "./pages/Notification";
+import AdminDashboard from "./pages/Admin";
 import { useNotificationSocket } from "./hooks/useNotificationSocket";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("Mumbai");
-  // useNotificationSocket();
+  useNotificationSocket();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -45,6 +46,7 @@ function App() {
         <Route path="/business-profile" element={<BusinessProfile />} />
         <Route path="/booking-management" element={<BookingManagement />} />
         <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/admin" element = {<AdminDashboard/>} />
         {/* Add more routes as needed */}
 
         {/* Protected Route */}

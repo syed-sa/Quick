@@ -1,5 +1,4 @@
 package com.justsearch.backend.config;
-
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +48,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/ws-notify/**",
                                 "/images/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
@@ -56,8 +56,7 @@ public class SecurityConfig {
                                 "/api/user/logout",
                                 "/api/user/refresh",
                                 "/api/user/signin",
-                                "/api/user/signup",
-                                "/ws-notify/**")
+                                "/api/user/signup")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

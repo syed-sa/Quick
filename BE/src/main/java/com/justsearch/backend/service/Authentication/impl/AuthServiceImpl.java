@@ -90,8 +90,18 @@ public class AuthServiceImpl implements AuthService {
             final String token = getAccessToken(user, request.getPassword());
             RefreshToken refreshToken = jwtUtils.generateRefreshToken(user.getId());
             _refreshTokenRepository.save(refreshToken);
-            TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), token, refreshToken.getToken(),
-                    user.getId());
+
+            // Determine the role
+            String role = user.getRoles().stream()
+                    .anyMatch(r -> r.getName().equalsIgnoreCase("ADMIN")) ? "ADMIN" : "USER";
+
+            TokenResponseDto tokenResponse = new TokenResponseDto(
+                    user.getName(),
+                    token,
+                    refreshToken.getToken(),
+                    user.getId(),
+                    role // pass the role string here
+            );
 
             return ResponseEntity.ok(tokenResponse);
         } catch (Exception ex) {
@@ -117,13 +127,21 @@ public class AuthServiceImpl implements AuthService {
                     user.getRoles().stream()
                             .map(role -> new SimpleGrantedAuthority(role.getName()))
                             .toList());
-                             Authentication auth = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
             String newAccessToken = jwtUtils.generateToken(auth);
             RefreshToken newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
-            TokenResponseDto tokenResponse = new TokenResponseDto(user.getName(), newAccessToken,
+            String role = user.getRoles().stream()
+                    .anyMatch(r -> r.getName().equalsIgnoreCase("ADMIN")) ? "ADMIN" : "USER";
+
+            TokenResponseDto tokenResponse = new TokenResponseDto(
+                    user.getName(),
+                    newAccessToken,
                     newRefreshToken.getToken(),
-                    user.getId());
+                    user.getId(),
+                    role // pass the role string here
+            );
+
             _refreshTokenRepository.save(newRefreshToken);
             return ResponseEntity.ok(tokenResponse);
         } else {

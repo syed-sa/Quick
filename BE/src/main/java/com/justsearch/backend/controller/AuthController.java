@@ -44,7 +44,6 @@ public class AuthController {
         System.out.println("UserInput: " + signInCredentials.getEmail());
         return _authService.userSignIn(signInCredentials);
     }
-
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody String refreshToken) {
         if (refreshToken == null || refreshToken.isEmpty()) {

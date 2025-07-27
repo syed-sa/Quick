@@ -6,13 +6,14 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = (token, refreshToken,userName,userId) => {
+  const login = (token, refreshToken,userName,userId,role) => {
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("userName", userName);
     localStorage.setItem("userId", userId);
+    localStorage.setItem("role",role)
     const decoded = jwtDecode(token);
-    setUser({ email: decoded.sub, name: userName , userId: userId });
+    setUser({ email: decoded.sub, name: userName , userId: userId ,role:role});
   };
 
   const logout = async () => {
@@ -48,10 +49,11 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const userName = localStorage.getItem("userName");
     const userId = localStorage.getItem("userId");
+    const role =  localStorage.getItem("role");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser({ email: decoded.sub, name: userName, userId: userId });
+        setUser({ email: decoded.sub, name: userName, userId: userId , role:role});
       } catch (err) {
         logout(); // invalid token
       }

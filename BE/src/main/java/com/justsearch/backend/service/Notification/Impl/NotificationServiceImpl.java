@@ -1,5 +1,4 @@
 package com.justsearch.backend.service.Notification.Impl;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,13 +94,10 @@ private void pushToast(Notification n) {
         System.out.println("Toast message: " + toastMessage);
          User user = _userRepository.findById(n.getUserId()).orElse(new User());
         messagingTemplate.convertAndSendToUser(
-               user.getEmail().toString(),           
+               user.getEmail(),           
                 "/queue/toast",    
                 toastMessage
         );
-        
-        // Alternative: Send to all users (for testing)
-        // messagingTemplate.convertAndSend("/user/queue/toast", toastMessage);
         
     } catch (Exception e) {
         System.err.println("Error sending toast notification: " + e.getMessage());

@@ -1,4 +1,5 @@
 package com.justsearch.backend.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -13,12 +14,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
-import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.security.JwtUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.net.URI;
 import java.security.Principal;
 import java.util.Map;
 
@@ -28,9 +26,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private JwtUtils _jwtUtils;
 
-    public WebSocketConfig(JwtUtils jwtUtils)
-    {
-_jwtUtils = jwtUtils;
+    public WebSocketConfig(JwtUtils jwtUtils) {
+        _jwtUtils = jwtUtils;
     }
 
     @Override
@@ -39,7 +36,8 @@ _jwtUtils = jwtUtils;
                 .addInterceptors(httpHandshakeInterceptor())
                 .setHandshakeHandler(new DefaultHandshakeHandler() {
                     @Override
-                    protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+                    protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
+                            Map<String, Object> attributes) {
                         return () -> (String) attributes.get("user");
                     }
                 })
@@ -50,27 +48,28 @@ _jwtUtils = jwtUtils;
     @Bean
     public HandshakeInterceptor httpHandshakeInterceptor() {
         return new HandshakeInterceptor() {
-@Override
-public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                               WebSocketHandler wsHandler, Map<String, Object> attributes) {
+            @Override
+            public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+                    WebSocketHandler wsHandler, Map<String, Object> attributes) {
 
-    if (request instanceof ServletServerHttpRequest servletRequest) {
-        HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
+                if (request instanceof ServletServerHttpRequest servletRequest) {
+                    HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
 
-          String  token = httpServletRequest.getParameter("token");
-        if (token != null && _jwtUtils.validateToken(token)) {
-            String username = _jwtUtils.extractUsername(token);
-            attributes.put("user", username);
-            return true;
-        }
-    }
+                    String token = httpServletRequest.getParameter("token");
+                    if (token != null && _jwtUtils.validateToken(token)) {
+                        String username = _jwtUtils.extractUsername(token);
+                        attributes.put("user", username);
+                        return true;
+                    }
+                }
 
-    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-    return false;
-}
-     @Override
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return false;
+            }
+
+            @Override
             public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                       WebSocketHandler wsHandler, Exception exception) {
+                    WebSocketHandler wsHandler, Exception exception) {
                 // No-op
             }
         };
