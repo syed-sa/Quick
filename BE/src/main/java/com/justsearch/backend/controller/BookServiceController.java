@@ -59,4 +59,13 @@ public class BookServiceController {
             return ResponseEntity.internalServerError().body("Error updating booking: " + e.getMessage());
         }
     }
+
+    @GetMapping("/getRecentBookings")
+    public ResponseEntity<?> getRecentBookings() {
+        try {
+            return ResponseEntity.ok(_bookService.getRecentBookings());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching recent bookings: " + e.getMessage());
+        }
+    }
 }

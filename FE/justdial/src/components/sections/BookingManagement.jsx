@@ -37,7 +37,6 @@ const UnifiedBookingManagement = () => {
   const [activeTab, setActiveTab] = useState('received');
 
   useEffect(() => {
-    // Simulate initial load
     setFilteredBookings(bookings[activeTab] || []);
   }, []);
 

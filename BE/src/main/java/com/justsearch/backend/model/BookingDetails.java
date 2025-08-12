@@ -1,24 +1,35 @@
 package com.justsearch.backend.model;
+
 import java.time.LocalDateTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class BookingDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long serviceId;
-    private Long customerId;
-    private Long serviceProviderId;
+
+    // Service Provider relationship
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_provider_id", referencedColumnName = "id")
+    private User serviceProvider;
+
+    // Customer relationship
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private User customer;
+
     private String serviceName;
     private LocalDateTime createdAt;
     private String bookingStatus;
     private String description;
     private boolean isActive = true;
     private String location;
+
+    // --- Getters & Setters ---
 
     public Long getId() {
         return id;
@@ -32,20 +43,20 @@ public class BookingDetails {
         this.serviceId = serviceId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public User getServiceProvider() {
+        return serviceProvider;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setServiceProvider(User serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 
-    public Long getServiceProviderId() {
-        return serviceProviderId;
+    public User getCustomer() {
+        return customer;
     }
 
-    public void setServiceProviderId(Long serviceProviderId) {
-        this.serviceProviderId = serviceProviderId;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
 
     public String getServiceName() {
@@ -83,17 +94,16 @@ public class BookingDetails {
     public boolean isActive() {
         return isActive;
     }
+
     public void setActive(boolean active) {
         isActive = active;
     }
-    public String getLocation()
-    {
+
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation (String location)
-    {
+    public void setLocation(String location) {
         this.location = location;
     }
-
 }

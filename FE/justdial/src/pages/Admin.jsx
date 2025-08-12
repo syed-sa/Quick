@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
+import api from  '../components/auth/axios';
 import { 
   Users, 
   UserCheck, 
   Calendar, 
   DollarSign, 
   TrendingUp, 
-  Settings, 
-  Bell, 
   Search,
   Filter,
   MoreHorizontal,
@@ -16,18 +15,14 @@ import {
   CheckCircle,
   XCircle,
   Star,
-  MapPin,
   Phone,
-  Mail,
-  ArrowLeft,
-  Shield
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [bookings, setBookings] = useState([]);
+  const [users, setUsers] = useState([]);
   // Mock data
   const stats = {
     totalUsers: 1245,
@@ -35,7 +30,21 @@ const AdminDashboard = () => {
     activeBookings: 89,
     totalRevenue: 45670
   };
+useEffect(() => {
+  const fetchBookings = async () => {
+    try {
+      const res = await api.get("/bookservice/getRecentBookings");
+      setBookings(res.data);
+      const userRes = await api.get("/user/getAllUsers");
+      setUsers(userRes.data);
+    } catch (err) {
+      console.error("Failed to fetch bookings", err);
+    }
+  };
 
+
+  fetchBookings();
+}, []);
   const recentBookings = [
     {
       id: 1,
@@ -66,26 +75,26 @@ const AdminDashboard = () => {
     }
   ];
 
-  const users = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@email.com',
-      phone: '+1234567890',
-      joinDate: '2024-12-15',
-      totalBookings: 5,
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane@email.com',
-      phone: '+1234567891',
-      joinDate: '2024-11-20',
-      totalBookings: 12,
-      status: 'active'
-    }
-  ];
+  //  users = [
+  //   {
+  //     id: 1,
+  //     name: 'John Doe',
+  //     email: 'john@email.com',
+  //     phone: '+1234567890',
+  //     joinDate: '2024-12-15',
+  //     totalBookings: 5,
+  //     status: 'active'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Jane Smith',
+  //     email: 'jane@email.com',
+  //     phone: '+1234567891',
+  //     joinDate: '2024-11-20',
+  //     totalBookings: 12,
+  //     status: 'active'
+  //   }
+  // ];
 
   const providers = [
     {
@@ -188,25 +197,19 @@ const AdminDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {recentBookings.map((booking) => (
+              {bookings.map((booking) => (
                 <tr key={booking.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{booking.customer}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{booking.provider}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{booking.service}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{booking.date}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{booking.customerId}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{booking.serviceName}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{booking.createdAt}</td>
                   <td className="px-6 py-4">
-                    <StatusBadge status={booking.status} />
+                    <StatusBadge status={booking.bookingStatus} />
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">${booking.amount}</td>
-                  <td className="px-6 py-4">
-                    <button className="text-gray-400 hover:text-gray-600">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">100</td>
                 </tr>
               ))}
             </tbody>
@@ -247,7 +250,6 @@ const AdminDashboard = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Join Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bookings</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -268,10 +270,9 @@ const AdminDashboard = () => {
                       <span>{user.phone}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{user.joinDate}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{user.totalBookings}</td>
                   <td className="px-6 py-4">
-                    <StatusBadge status={user.status} />
+                    <StatusBadge status={"active"} />
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">

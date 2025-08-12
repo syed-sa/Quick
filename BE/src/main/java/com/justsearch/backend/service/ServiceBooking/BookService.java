@@ -7,4 +7,5 @@ public interface BookService {
      List<BookingDetailsDto> getBookingRequests(long userId);
      List<BookingDetailsDto> getMyBookings(long userId);
      void updateBooking(long bookingId, String status);
+     List<BookingDetailsDto> getRecentBookings();
 } 

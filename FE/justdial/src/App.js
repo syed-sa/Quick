@@ -1,26 +1,26 @@
-import { Routes, Route } from "react-router-dom";
-import Header from "./components/layouts/Header";
-import Footer from "./components/layouts/Footer";
-import HomePage from "./pages/HomePage";
-import AuthForm from "./components/auth/AuthForm";
-import Favorites from "./pages/Favorites";
-import UserProfile from "./pages/Profile";
-import RegisterService from "./pages/RegisterService";
-import PrivateRoute from "./components/auth/PrivateRoute";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
-import ServicesPage from "./pages/ServicePage";
-import ServiceDetailPage from "./pages/ServiceDetailPage";
-import BusinessProfile from "./pages/BuisnessProfile";
-import BookingManagement from "./components/sections/BookingManagement";
-import NotificationPage from "./pages/Notification";
-import AdminDashboard from "./pages/Admin";
-import { useNotificationSocket } from "./hooks/useNotificationSocket";
+  import { Routes, Route } from "react-router-dom";
+  import Header from "./components/layouts/Header";
+  import Footer from "./components/layouts/Footer";
+  import HomePage from "./pages/HomePage";
+  import AuthForm from "./components/auth/AuthForm";
+  import Favorites from "./pages/Favorites";
+  import UserProfile from "./pages/Profile";
+  import RegisterService from "./pages/RegisterService";
+  import PrivateRoute from "./components/auth/PrivateRoute";
+  import { ToastContainer } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+  import { useState } from "react";
+  import ServicesPage from "./pages/ServicePage";
+  import ServiceDetailPage from "./pages/ServiceDetailPage";
+  import BusinessProfile from "./pages/BuisnessProfile";
+  import BookingManagement from "./components/sections/BookingManagement";
+  import NotificationPage from "./pages/Notification";
+  import AdminDashboard from "./pages/Admin";
+  import { useNotificationSocket } from "./hooks/useNotificationSocket";
 
-function App() {
-  const [selectedCity, setSelectedCity] = useState("Mumbai");
-  useNotificationSocket();
+  function App() {
+    const [selectedCity, setSelectedCity] = useState("Mumbai");
+    useNotificationSocket();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -47,9 +47,7 @@ function App() {
         <Route path="/booking-management" element={<BookingManagement />} />
         <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/admin" element = {<AdminDashboard/>} />
-        {/* Add more routes as needed */}
 
-        {/* Protected Route */}
         <Route
           path="/register-service"
           element={

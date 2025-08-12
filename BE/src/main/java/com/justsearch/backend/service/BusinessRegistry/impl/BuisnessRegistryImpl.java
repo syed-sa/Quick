@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.RegisterBusinessDto;  
 import com.justsearch.backend.dto.ServiceDto;
+import com.justsearch.backend.mapper.ServiceMapper;
 import com.justsearch.backend.model.Services;
 import com.justsearch.backend.repository.CategoryRepository;
 import com.justsearch.backend.repository.ServicesRepository;
@@ -21,16 +21,15 @@ import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
 public class BuisnessRegistryImpl implements BuisnessRegistry {
     private ServicesRepository _servicesRepository;
     private CategoryRepository _categoryRepository;
-    private final ModelMapper serviceMapper;
+    private final ServiceMapper serviceMapper;
     @Value("${basepath}")
     private String basePath;
 
     public BuisnessRegistryImpl(ServicesRepository servicesRepository, CategoryRepository categoryRepository,
-            ModelMapper serviceMapper) {
+            ServiceMapper serviceMapper) {
         _servicesRepository = servicesRepository;
         _categoryRepository = categoryRepository;
         this.serviceMapper = serviceMapper;
-        _categoryRepository = categoryRepository;
     }
 
     public void registerBusiness(RegisterBusinessDto registerServices) {
@@ -79,9 +78,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         }
         Long categoryId = businessCategory.getId();
         List<Services> services = _servicesRepository.findByBusinessCategoryIdAndPostalCode(categoryId, postalCode);
-        List<ServiceDto> serviceDtos = services.stream()
-                .map(source -> serviceMapper.map(source, ServiceDto.class))
-            .collect(Collectors.toList());
+        List<ServiceDto> serviceDtos = serviceMapper.toDtoList(services);
         return serviceDtos;
     }
 
@@ -112,9 +109,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
             throw new IllegalArgumentException("User ID must be greater than zero");
         }
         List<Services> services = _servicesRepository.findAllByUserId(userId);
-        List<ServiceDto> serviceDtos = services.stream()
-                .map(source -> serviceMapper.map(source, ServiceDto.class))
-                .collect(Collectors.toList());
+        List<ServiceDto> serviceDtos = serviceMapper.toDtoList(services);
         return serviceDtos;
     }
 
@@ -125,7 +120,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         if (!_servicesRepository.existsById(service.getId())) {
             throw new IllegalArgumentException("Service with ID " + service.getId() + " does not exist");
         }
-        _servicesRepository.save(serviceMapper.map(service, Services.class));
+        _servicesRepository.save(serviceMapper.toEntity(service));
     }
 
 }

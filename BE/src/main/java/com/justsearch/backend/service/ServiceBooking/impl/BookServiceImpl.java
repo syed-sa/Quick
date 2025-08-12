@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.BookingDetailsDto;
+import com.justsearch.backend.mapper.BookingDetailsMapper;
 import com.justsearch.backend.model.BookingDetails;
+import com.justsearch.backend.model.Services;
+import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.BookingDetailsRepository;
-import com.justsearch.backend.repository.NotificationRepository;
 import com.justsearch.backend.repository.ServicesRepository;
 import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.service.Notification.NotificationService;
@@ -20,49 +22,64 @@ public class BookServiceImpl implements BookService {
     private ServicesRepository _servicesRepository;
     private UserRepository _userRepository;
     private NotificationService _notificationService;
+    private BookingDetailsMapper _bookingDetailsMapper;
 
     public BookServiceImpl(BookingDetailsRepository bookingDetailsRepository, ServicesRepository servicesRepository,
             UserRepository userRepository,
-            NotificationService notificationService) {
+            NotificationService notificationService, BookingDetailsMapper bookingDetailsMapper) {
         _bookingDetailsRepository = bookingDetailsRepository;
         _servicesRepository = servicesRepository;
         _userRepository = userRepository;
         _notificationService = notificationService;
+        _bookingDetailsMapper = bookingDetailsMapper;
     }
 
     public void createBookingRequest(BookingDetailsDto bookserviceDto) {
         if (bookserviceDto == null) {
             throw new IllegalArgumentException("service must not be null");
         }
-        _userRepository.findById(bookserviceDto.getCustomerId())
+
+        // Fetch Customer entity
+        User customer = _userRepository.findById(bookserviceDto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid customer ID"));
-        long serviceProviderId = _servicesRepository.findById(bookserviceDto.getServiceId()).get().userId;
+
+        Services service = _servicesRepository.findById(bookserviceDto.getServiceId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid service ID"));
+
+            User serviceProvider = _userRepository.findById(service.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid service provider ID"));
+
+        // Create and set booking details
         BookingDetails bookingDetails = new BookingDetails();
-        System.out.println(bookserviceDto.getDescription());
-        bookingDetails.setCustomerId(bookserviceDto.getCustomerId());
-        bookingDetails.setServiceProviderId(serviceProviderId);
+        bookingDetails.setCustomer(customer);
+        bookingDetails.setServiceProvider(serviceProvider);
         bookingDetails.setServiceId(bookserviceDto.getServiceId());
         bookingDetails.setServiceName(bookserviceDto.getServiceName());
         bookingDetails.setBookingStatus(AppConstants.BOOKING_STATUS_PENDING);
         bookingDetails.setDescription(bookserviceDto.getDescription());
         bookingDetails.setCreatedAt(LocalDateTime.now());
-        bookingDetails.setLocation(bookserviceDto.location);
-        _bookingDetailsRepository.save(bookingDetails);
-        _notificationService.createNotification(bookingDetails);
-        System.out.println("Booking request created successfully for service: " + bookingDetails.getServiceName()
-                + " with ID: " + bookingDetails.getId());
+        bookingDetails.setLocation(bookserviceDto.getLocation());
+        bookingDetails.setActive(true);
 
+        // Save booking
+        _bookingDetailsRepository.save(bookingDetails);
+
+        // Create notification
+        _notificationService.createNotification(bookingDetails);
+
+        System.out.println("Booking request created successfully for service: " +
+                bookingDetails.getServiceName() + " with ID: " + bookingDetails.getId());
     }
 
     public List<BookingDetailsDto> getBookingRequests(long serviceProviderId) {
         var bookService = _bookingDetailsRepository.fetchBookingsWithCustomerInfo(serviceProviderId);
-        return bookService;
+        return _bookingDetailsMapper.toDtoList(bookService);
     }
 
     public List<BookingDetailsDto> getMyBookings(long userId) {
 
-        List<BookingDetailsDto> bookService = _bookingDetailsRepository.fetchBookingsWithServiceProviderInfo(userId);
-        return bookService;
+        List<BookingDetails> bookService = _bookingDetailsRepository.fetchBookingsWithServiceProviderInfo(userId);
+        return _bookingDetailsMapper.toDtoList(bookService);
     }
 
     public void updateBooking(long bookingId, String status) {
@@ -75,6 +92,11 @@ public class BookServiceImpl implements BookService {
             bookingDetails.setActive(false);
         }
         _bookingDetailsRepository.save(bookingDetails);
+    }
+
+    public List<BookingDetailsDto> getRecentBookings() {
+        List<BookingDetails> recentBookings = _bookingDetailsRepository.findTop10ByOrderByCreatedAtDesc();
+        return _bookingDetailsMapper.toDtoList(recentBookings);
     }
 
 }

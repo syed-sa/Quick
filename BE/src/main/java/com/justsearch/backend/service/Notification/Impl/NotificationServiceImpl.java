@@ -1,8 +1,6 @@
 package com.justsearch.backend.service.Notification.Impl;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.NotificationDto;
 import com.justsearch.backend.dto.ToastMessage;
+import com.justsearch.backend.mapper.NotificationMapper;
 import com.justsearch.backend.model.BookingDetails;
 import com.justsearch.backend.model.Notification;
 import com.justsearch.backend.model.User;
@@ -20,13 +19,13 @@ import com.justsearch.backend.service.Notification.NotificationService;
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository _notificationRepository;
-    private final ModelMapper _notificationMapper;
-        private UserRepository _userRepository;
+    private final NotificationMapper _notificationMapper;
+    private UserRepository _userRepository;
 
      private final SimpMessagingTemplate messagingTemplate;   // <-- new
 
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, ModelMapper notificationMapper,
+    public NotificationServiceImpl(NotificationRepository notificationRepository, NotificationMapper notificationMapper,
     SimpMessagingTemplate simpMessagingTemplate,UserRepository userRepository) {
         _notificationRepository = notificationRepository;
         _notificationMapper = notificationMapper;
@@ -38,9 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
         // Fetch notifications from the repository and convert them to DTOs
         List<Notification> notifications = _notificationRepository.findAllByUserId(userId); // Filter out read
                                                                                             // notifications
-        return notifications.stream()
-                .map(notification -> _notificationMapper.map(notification, NotificationDto.class))
-                .collect(Collectors.toList());
+        return _notificationMapper.toDtoList(notifications);
 
     }
 
@@ -55,8 +52,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     public void createNotification(BookingDetails bookingDetails) {
         Notification notification = new Notification();
-        notification.setUserId(bookingDetails.getServiceProviderId());
-        notification.setMessage("New booking request from customer: " + bookingDetails.getCustomerId());
+        notification.setUserId(bookingDetails.getServiceProvider().getId());
+        notification.setMessage("New booking request from customer: " + bookingDetails.getCustomer().getId());
         notification.setRead(false);
         notification.setTimestamp(LocalDateTime.now());
         notification.setNotificationTitle(AppConstants.NEW_BOOKING_REQUEST);
@@ -68,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public void createBookingRejectedNotification(BookingDetails bookingDetails) {
         Notification notification = new Notification();
-        notification.setUserId(bookingDetails.getCustomerId());
+        notification.setUserId(bookingDetails.getCustomer().getId());
         notification.setMessage("Your booking request for service: " + bookingDetails.getServiceName() + " has been "
                 + bookingDetails.getBookingStatus());
         notification.setRead(false);
