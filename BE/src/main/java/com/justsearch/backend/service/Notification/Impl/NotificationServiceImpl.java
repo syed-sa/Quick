@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public void createNotification(BookingDetails bookingDetails) {
         Notification notification = new Notification();
-        notification.setUserId(bookingDetails.getServiceProvider().getId());
+        notification.setUserId(bookingDetails.getService().getServiceProvider().getId());
         notification.setMessage("New booking request from customer: " + bookingDetails.getCustomer().getId());
         notification.setRead(false);
         notification.setTimestamp(LocalDateTime.now());
@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void createBookingRejectedNotification(BookingDetails bookingDetails) {
         Notification notification = new Notification();
         notification.setUserId(bookingDetails.getCustomer().getId());
-        notification.setMessage("Your booking request for service: " + bookingDetails.getServiceName() + " has been "
+        notification.setMessage("Your booking request for service: " + bookingDetails.getService().getCompanyName() + " has been "
                 + bookingDetails.getBookingStatus());
         notification.setRead(false);
         notification.setTimestamp(LocalDateTime.now());

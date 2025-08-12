@@ -12,37 +12,46 @@ import com.justsearch.backend.constants.AppConstants;
 import com.justsearch.backend.dto.RegisterBusinessDto;  
 import com.justsearch.backend.dto.ServiceDto;
 import com.justsearch.backend.mapper.ServiceMapper;
+import com.justsearch.backend.model.BuisnessCategory;
 import com.justsearch.backend.model.Services;
+import com.justsearch.backend.model.User;
 import com.justsearch.backend.repository.CategoryRepository;
 import com.justsearch.backend.repository.ServicesRepository;
+import com.justsearch.backend.repository.UserRepository;
 import com.justsearch.backend.service.BusinessRegistry.BuisnessRegistry;
 
 @Service
 public class BuisnessRegistryImpl implements BuisnessRegistry {
     private ServicesRepository _servicesRepository;
     private CategoryRepository _categoryRepository;
+    private UserRepository _userRepository;
     private final ServiceMapper serviceMapper;
     @Value("${basepath}")
     private String basePath;
 
     public BuisnessRegistryImpl(ServicesRepository servicesRepository, CategoryRepository categoryRepository,
-            ServiceMapper serviceMapper) {
+            UserRepository userRepository, ServiceMapper serviceMapper) {
         _servicesRepository = servicesRepository;
         _categoryRepository = categoryRepository;
+        _userRepository = userRepository;
         this.serviceMapper = serviceMapper;
     }
 
     public void registerBusiness(RegisterBusinessDto registerServices) {
         try{
-        if (_servicesRepository.existsByUserIdAndCompanyName(registerServices.getUserId(),
+        if (_servicesRepository.existsByServiceProviderIdAndCompanyName(registerServices.getUserId(),
                 registerServices.getCompanyName())) {
             throw new IllegalStateException("Business has already been registered by this user.");
         } else {
             Services services = new Services();
-            services.setUserId(registerServices.getUserId());
+            User serviceProvider = _userRepository.findById(registerServices.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            BuisnessCategory businessCategory = _categoryRepository.findById(registerServices.getBusinessCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Business category not found"));
+            services.setServiceProvider(serviceProvider);
             services.setCompanyName(registerServices.getCompanyName());
             services.setCity(registerServices.getCity());
-            services.setBusinessCategoryId(registerServices.getBusinessCategoryId());
+            services.setBusinessCategory(businessCategory);
             services.setAddress(registerServices.getAddress());
             services.setEmail(registerServices.getEmail());
             services.setPhone(registerServices.getPhone());
@@ -108,7 +117,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
         if (userId <= 0) {
             throw new IllegalArgumentException("User ID must be greater than zero");
         }
-        List<Services> services = _servicesRepository.findAllByUserId(userId);
+        List<Services> services = _servicesRepository.findAllByServiceProviderId(userId);
         List<ServiceDto> serviceDtos = serviceMapper.toDtoList(services);
         return serviceDtos;
     }

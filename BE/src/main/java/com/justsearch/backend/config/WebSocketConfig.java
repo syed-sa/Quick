@@ -13,8 +13,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
-import org.springframework.web.socket.sockjs.transport.handler.WebSocketTransportHandler;
-import org.springframework.web.socket.sockjs.transport.handler.XhrPollingTransportHandler;
 
 import com.justsearch.backend.security.JwtUtils;
 

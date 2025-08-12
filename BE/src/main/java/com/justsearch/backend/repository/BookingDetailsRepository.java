@@ -9,14 +9,18 @@ import com.justsearch.backend.model.BookingDetails;
 public interface BookingDetailsRepository extends JpaRepository<BookingDetails,Long> {
 
 
-   @Query("SELECT b FROM BookingDetails b " +
+  @Query("SELECT b FROM BookingDetails b " +
        "JOIN FETCH b.customer c " +
-       "WHERE b.serviceProvider.id = :serviceProviderId")
+       "JOIN FETCH b.service s " +
+       "JOIN FETCH s.serviceProvider sp " +
+       "WHERE sp.id = :serviceProviderId")
 List<BookingDetails> fetchBookingsWithCustomerInfo(@Param("serviceProviderId") Long serviceProviderId);
 
 @Query("SELECT b FROM BookingDetails b " +
-       "JOIN FETCH b.serviceProvider sp " +
-       "WHERE b.customer.id = :customerId")
+       "JOIN FETCH b.customer c " +
+       "JOIN FETCH b.service s " +
+       "JOIN FETCH s.serviceProvider sp " +
+       "WHERE c.id = :customerId")
 List<BookingDetails> fetchBookingsWithServiceProviderInfo(@Param("customerId") Long customerId);
 
  List<BookingDetails> findTop10ByOrderByCreatedAtDesc();

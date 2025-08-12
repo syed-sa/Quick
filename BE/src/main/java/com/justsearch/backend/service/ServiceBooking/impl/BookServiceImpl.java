@@ -39,36 +39,25 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("service must not be null");
         }
 
-        // Fetch Customer entity
         User customer = _userRepository.findById(bookserviceDto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid customer ID"));
 
         Services service = _servicesRepository.findById(bookserviceDto.getServiceId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid service ID"));
 
-            User serviceProvider = _userRepository.findById(service.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid service provider ID"));
 
-        // Create and set booking details
         BookingDetails bookingDetails = new BookingDetails();
         bookingDetails.setCustomer(customer);
-        bookingDetails.setServiceProvider(serviceProvider);
-        bookingDetails.setServiceId(bookserviceDto.getServiceId());
-        bookingDetails.setServiceName(bookserviceDto.getServiceName());
+        bookingDetails.setService(service);
         bookingDetails.setBookingStatus(AppConstants.BOOKING_STATUS_PENDING);
         bookingDetails.setDescription(bookserviceDto.getDescription());
         bookingDetails.setCreatedAt(LocalDateTime.now());
         bookingDetails.setLocation(bookserviceDto.getLocation());
         bookingDetails.setActive(true);
-
-        // Save booking
         _bookingDetailsRepository.save(bookingDetails);
-
-        // Create notification
         _notificationService.createNotification(bookingDetails);
-
         System.out.println("Booking request created successfully for service: " +
-                bookingDetails.getServiceName() + " with ID: " + bookingDetails.getId());
+                bookingDetails.getService().getCompanyName() + " with ID: " + bookingDetails.getId());
     }
 
     public List<BookingDetailsDto> getBookingRequests(long serviceProviderId) {
@@ -77,7 +66,6 @@ public class BookServiceImpl implements BookService {
     }
 
     public List<BookingDetailsDto> getMyBookings(long userId) {
-
         List<BookingDetails> bookService = _bookingDetailsRepository.fetchBookingsWithServiceProviderInfo(userId);
         return _bookingDetailsMapper.toDtoList(bookService);
     }

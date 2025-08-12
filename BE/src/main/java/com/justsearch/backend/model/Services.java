@@ -1,27 +1,45 @@
-package  com.justsearch.backend.model;
+package com.justsearch.backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
 @Entity
-@Table(name = "services", uniqueConstraints = @UniqueConstraint(columnNames = { "userId", "companyName" }))
+@Table(name = "services", uniqueConstraints = @UniqueConstraint(columnNames = { "service_provider_id", "company_name" }))
 public class Services {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
-    public long userId;
-    public String companyName;
-    public String city;
-    public long businessCategoryId;
-    public String phone;
-    public String email;
-    public String website;
-    public String address;
-    public String postalCode;
+    private long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_provider_id", nullable = false)
+    private User serviceProvider;
+
+    @Column(name = "company_name")
+    private String companyName;
+
+    private String city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_category_id", nullable = false)
+    private BuisnessCategory businessCategory;
+
+    private String phone;
+
+    private String email;
+
+    private String website;
+
+    private String address;
+
+    private String postalCode;
 
     public String getCompanyName() {
         return companyName;
@@ -39,12 +57,12 @@ public class Services {
         this.city = city;
     }
 
-    public long getBusinessCategoryId() {
-        return businessCategoryId;
+    public BuisnessCategory getBusinessCategory() {
+        return businessCategory;
     }
 
-    public void setBusinessCategoryId(long businessCategoryId) {
-        this.businessCategoryId = businessCategoryId;
+    public void setBusinessCategory(BuisnessCategory businessCategory) {
+        this.businessCategory = businessCategory;
     }
 
     public String getPhone() {
@@ -79,12 +97,12 @@ public class Services {
         this.address = address;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getServiceProvider() {
+        return serviceProvider;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setServiceProvider(User serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 
     public String getPostalCode() {
@@ -94,6 +112,7 @@ public class Services {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
     public long getId() {
         return id;
     }

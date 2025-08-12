@@ -3,57 +3,96 @@ import { useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+
+// Utility to check if token is expired
+function isTokenExpired(token) {
+  try {
+    const { exp } = jwtDecode(token);
+    return Date.now() >= exp * 1000;
+  } catch {
+    return true; // treat as expired if can't decode
+  }
+}
+
+// Get a valid access token (refresh if needed)
+async function getValidToken() {
+  let token = localStorage.getItem("token");
+  if (!token || isTokenExpired(token)) {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) throw new Error("No refresh token found");
+
+    const res = await axios.post(
+      "http://localhost:8080/api/user/refresh",
+      refreshToken,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    token = res.data.accessToken;
+    localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", res.data.refreshToken);
+  }
+  return token;
+}
 
 export function useNotificationSocket() {
   const stompClientRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("No token found in localStorage");
-      return;
-    }
+    let isMounted = true;
 
-    const stompClient = new Client({
-      webSocketFactory: () =>
-        new SockJS(`http://localhost:8080/ws-notify?token=${token}`), 
-      reconnectDelay: 5000,
-      debug: (str) => console.log(str),
-    });
+    const connectSocket = async () => {
+      try {
+        const token = await getValidToken();
+        if (!isMounted) return; // prevent connecting after unmount
 
-    stompClient.onConnect = (frame) => {
-      console.log("Connected to WebSocket:", frame);
+        const stompClient = new Client({
+          webSocketFactory: () =>
+            new SockJS(`http://localhost:8080/ws-notify?token=${token}`),
+          reconnectDelay: 5000,
+          debug: (str) => console.log(str),
+        });
 
-      stompClient.subscribe(`/user/queue/toast`, (message) => {
-        console.log("Received toast message:", message.body);
-        try {
-          const notification = JSON.parse(message.body);
-          console.log(" Parsed notification:", notification);
+        stompClient.onConnect = (frame) => {
+          console.log("Connected to WebSocket:", frame);
 
-          toast.info(notification.body, {
-            autoClose: 4000,
-            position: "top-right",
+          stompClient.subscribe(`/user/queue/toast`, (message) => {
+            console.log("Received toast message:", message.body);
+            try {
+              const notification = JSON.parse(message.body);
+              console.log("Parsed notification:", notification);
+
+              toast.info(notification.body, {
+                autoClose: 4000,
+                position: "top-right",
+              });
+            } catch (error) {
+              console.error("Error parsing notification:", error);
+            }
           });
-        } catch (error) {
-          console.error("Error parsing notification:", error);
-        }
-      });
+        };
+
+        stompClient.onStompError = (frame) => {
+          console.error("STOMP Error:", frame.headers["message"]);
+        };
+
+        stompClient.onWebSocketError = (error) => {
+          console.error("WebSocket Error:", error);
+        };
+
+        stompClient.activate();
+        stompClientRef.current = stompClient;
+      } catch (err) {
+        console.error("Failed to connect WebSocket:", err);
+      }
     };
 
-    stompClient.onStompError = (frame) => {
-      console.error("STOMP Error:", frame.headers["message"]);
-    };
-
-    stompClient.onWebSocketError = (error) => {
-      console.error("WebSocket Error:", error);
-    };
-
-    stompClient.activate(); // instead of stomp.connect()
-
-    stompClientRef.current = stompClient;
+    connectSocket();
 
     return () => {
-      if (stompClientRef.current && stompClientRef.current.active) {
+      isMounted = false;
+      if (stompClientRef.current?.active) {
         console.log("🔌 Disconnecting WebSocket...");
         stompClientRef.current.deactivate();
       }

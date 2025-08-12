@@ -204,7 +204,7 @@ useEffect(() => {
                 <tr key={booking.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm text-gray-900">{booking.customerId}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{booking.serviceName}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{booking.category}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{booking.createdAt}</td>
                   <td className="px-6 py-4">
                     <StatusBadge status={booking.bookingStatus} />
@@ -250,7 +250,6 @@ useEffect(() => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bookings</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
@@ -270,7 +269,6 @@ useEffect(() => {
                       <span>{user.phone}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{user.totalBookings}</td>
                   <td className="px-6 py-4">
                     <StatusBadge status={"active"} />
                   </td>
