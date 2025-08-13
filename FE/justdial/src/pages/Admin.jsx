@@ -25,10 +25,10 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   // Mock data
   const stats = {
-    totalUsers: 1245,
-    totalProviders: 342,
-    activeBookings: 89,
-    totalRevenue: 45670
+    totalUsers: 50,
+    totalProviders: 20,
+    activeBookings: 23,
+    totalRevenue: 120
   };
 useEffect(() => {
   const fetchBookings = async () => {

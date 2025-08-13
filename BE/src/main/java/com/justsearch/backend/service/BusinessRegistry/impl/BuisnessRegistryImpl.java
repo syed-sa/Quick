@@ -86,7 +86,7 @@ public class BuisnessRegistryImpl implements BuisnessRegistry {
             throw new IllegalArgumentException("Category not found: " + businessCategoryName);
         }
         Long categoryId = businessCategory.getId();
-        List<Services> services = _servicesRepository.findByBusinessCategoryIdAndPostalCode(categoryId, postalCode);
+        List<Services> services = _servicesRepository.findByCategoryAndPostal(categoryId, postalCode);
         List<ServiceDto> serviceDtos = serviceMapper.toDtoList(services);
         return serviceDtos;
     }

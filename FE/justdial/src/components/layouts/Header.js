@@ -13,7 +13,7 @@ const Header = ({ selectedCity, setSelectedCity }) => {
   <div className="w-full flex items-center justify-between px-4 md:px-8 py-4">
     {/* Logo now fully left */}
     <Link to="/" className="text-2xl font-bold text-yellow-500">
-      <span className="text-red-500">Just</span>Search
+      <span className="text-red-500">Quick</span>
     </Link>
 
     {/* Mobile Toggle */}
@@ -192,9 +192,10 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
         <Bell className="h-5 w-5" />
       </a>
 
-      <Link to="/favourites" className="text-gray-600 hover:text-gray-900 flex items-center">
-        <Heart className="h-5 w-5" />
-      </Link>
+     <Link to="/favourites" className="flex items-center">
+  <Heart className="h-5 w-5" fill="red" stroke="red" />
+</Link>
+
     </div>
   </>
 );
