@@ -67,7 +67,9 @@ const ProfilePage = () => {
             {/* Email Field */}
             <div className="flex items-center">
               <Mail className="h-5 w-5 text-gray-500 mr-3" />
-              <span className="text-gray-700 font-medium">{formData.email}</span>
+              <span className="text-gray-700 font-medium">
+                {formData.email}
+              </span>
             </div>
 
             {/* City Field */}
@@ -85,7 +87,9 @@ const ProfilePage = () => {
                   <option value="Hyderabad">Hyderabad</option>
                 </select>
               ) : (
-                <span className="text-gray-700 font-medium">{formData.city}</span>
+                <span className="text-gray-700 font-medium">
+                  {formData.city}
+                </span>
               )}
             </div>
           </div>

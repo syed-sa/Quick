@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { MapPin, User, Bell, Heart, Store, Menu, X } from "lucide-react";
+import { MapPin, User, Bell, Heart, Store, Menu, X, Shield } from "lucide-react";
+import {toast} from "react-toastify";
 
 const Header = ({ selectedCity, setSelectedCity }) => {
   const { user, logout } = useAuth();
@@ -73,7 +74,19 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
         <option>Bangalore</option>
         <option>Chennai</option>
       </select>
+      
     </div>
+
+    {/* Admin Access - Only show for admin users */}
+    {user && user.role === 'ADMIN' && (
+      <Link
+        to="/admin"
+        className="flex items-center text-red-600 hover:text-red-700 bg-red-50 px-3 py-1 rounded-full"
+      >
+        <Shield className="h-4 w-4 mr-1" />
+        <span className="text-sm font-medium">Admin Panel</span>
+      </Link>
+    )}
 
     {/* User / Notifications / Favourites */}
     <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
@@ -82,6 +95,11 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
           <div className="flex items-center text-gray-600 hover:text-gray-900 cursor-pointer">
             <User className="h-5 w-5 mr-1" />
             <span>Hello, {user.name}</span>
+            {user.role === 'ADMIN' && (
+              <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                Admin
+              </span>
+            )}
           </div>
           {!isMobile && (
             <div className="absolute right-0 top-full w-40 bg-white rounded-lg shadow-lg border z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
@@ -93,16 +111,26 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
               </Link>
               <Link
                 to="/business-profile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Business Profile
               </Link>
               <Link
                 to="/booking-management"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Bookings
               </Link>
+              {/* Admin Panel Link in Dropdown */}
+              {user.role === 'ADMIN' && (
+                <Link
+                  to="/admin"
+                  className="block px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin Panel
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 last:rounded-b-lg"
@@ -120,11 +148,27 @@ const NavItems = ({ user, logout, selectedCity, setSelectedCity, isMobile = fals
                 Profile
               </Link>
               <Link
-                to="/BusinessProfile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
+                to="/business-profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Business Profile
               </Link>
+              <Link
+                to="/booking-management"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Bookings
+              </Link>
+              {/* Admin Panel Link in Mobile Menu */}
+              {user.role === 'ADMIN' && (
+                <Link
+                  to="/admin"
+                  className="block px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin Panel
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
