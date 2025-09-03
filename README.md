@@ -11,18 +11,18 @@ The platform consists of:
 
 ---
 
-## 📌 Features
+## Features
 
-- 🔍 **Search & Browse Services** by category or name  
-- ❤️ **Favorite Services** with a heart icon  
-- 📄 **Service Details** page with images & descriptions  
-- 📅 **Booking System** for customers to book services  
-- 👤 **User Authentication & Profiles** (Spring Security)  
-- 📊 **Service Provider Dashboard** for managing listings and bookings  
+- **Search & Browse Services** by category or name  
+- **Favorite Services** with a heart icon  
+- **Service Details** page with images & descriptions  
+- **Booking System** for customers to book services  
+- **User Authentication & Profiles** (Spring Security)  
+- **Service Provider Dashboard** for managing listings and bookings  
 
 ---
 
-## 🏗️ Tech Stack
+##  Tech Stack
 
 **Frontend**
 - React.js  
@@ -41,7 +41,7 @@ The platform consists of:
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 justsearch/
@@ -101,9 +101,9 @@ npm install
 npm start
 ```
 
----
+--
 
-## 📡 API Endpoints (Sample)
+##  API Endpoints (Sample)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -116,7 +116,7 @@ npm start
 
 ---
 
-## 🧪 Running Tests
+## Running Tests
 
 ```bash
 # Backend tests
@@ -128,7 +128,7 @@ npm test
 
 ---
 
-## 🤝 Contribution Guidelines
+##  Contribution Guidelines
 
 1. Fork the repo and create a new branch.
 2. Follow the existing folder structure and naming conventions.
@@ -136,7 +136,7 @@ npm test
 
 ---
 
-## 👨‍💻 Authors
+##  Authors
 
 **Syed Abdul Saleem**
 
