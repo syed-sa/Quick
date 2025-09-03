@@ -70,7 +70,7 @@ justsearch/
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 ### **Backend**
 
